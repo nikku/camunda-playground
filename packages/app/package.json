@@ -28,7 +28,9 @@
   "dependencies": {
     "body-parser": "^1.18.3",
     "express": "^4.17.1",
+    "form-data": "^2.5.0",
     "get-port": "^5.0.0",
+    "got": "^9.6.0",
     "min-dash": "^3.4.0",
     "mri": "^1.1.4",
     "open": "^6.4.0",

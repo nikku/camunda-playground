@@ -11,11 +11,10 @@ const app = express();
 const staticDirectory = path.join(__dirname, '..', '..', 'client', 'public');
 
 const {
-  readFile,
-  startCamunda,
-  stopCamunda,
-  deployDiagram
+  readFile
 } = require('./util');
+
+const deploy = require('./util/deploy');
 
 
 async function failSafe(req, res, next) {
@@ -55,10 +54,7 @@ async function create(options) {
     try {
       const file = await readFile(diagramPath);
 
-      return res.json({
-        ...file,
-        name: path.basename(diagramPath)
-      });
+      return res.json(file);
     } catch (err) {
       console.error('failed to get diagram stats', err);
     }
