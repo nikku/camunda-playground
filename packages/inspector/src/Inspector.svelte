@@ -1,27 +1,70 @@
 <script>
-  import { onMount } from 'svelte';
+  import Diagram from './components/Diagram.svelte';
+  import FileDrop from './components/FileDrop.svelte';
+  import Loader from './components/Loader.svelte';
 
-  import Viewer from 'bpmn-js/dist/bpmn-viewer.development.js';
+  let name, xml;
 
-  let diagramUrl = 'https://cdn.rawgit.com/bpmn-io/bpmn-js-examples/dfceecba/starter/diagram.bpmn';
+  let loaderVisible = true;
 
-  let container;
+  const getDiagram = async url => {
+    const response = await fetch(url);
 
-  onMount(() => {
-    const viewer = new Viewer({
-      container
+    const json = await response.json();
+
+    setDiagram(json);
+  }
+
+  const putDiagram = async diagram => {
+    const { contents, name } = diagram;
+
+    if (contents === xml) {
+      return;
+    }
+
+    loaderVisible = true;
+
+    setDiagram({
+      contents,
+      path: name
     });
 
-    fetch(diagramUrl)
-      .then(response => response.text())
-      .then(diagramXML => {
-        viewer.importXML(diagramXML, (error, warnings) => {
-          if (error) {
-            console.error(error);
-          }
-        });
-      });
-  });
+    const response = await fetch('/api/diagram', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(diagram)
+    });
+
+    const json = await response.json();
+
+    console.log(json);
+  }
+
+  const setDiagram = ({ contents, path }) => {
+    if (contents) {
+      xml = contents;
+      name = path;
+    };
+  }
+
+  getDiagram('/api/diagram');
 </script>
 
-<div bind:this={container} id="container"></div>
+<style>
+  .diagram-name {
+    font-family: 'Arial', sans-serif;
+    left: 20px;
+    position: absolute;
+    top: 20px;
+  }
+</style>
+
+<Loader visible={ loaderVisible }></Loader>
+
+<FileDrop onFileDrop={ putDiagram }>
+  <Diagram xml={ xml } onImportDone={ () => loaderVisible = false } />
+</FileDrop>
+
+<div class="diagram-name">{ name }</div>
