@@ -1,0 +1,12 @@
+{
+  "extends": [
+    "plugin:bpmn-io/es6"
+  ],
+  "env": {
+    "node": true,
+    "es6": true
+  },
+  "rules": {
+    "require-atomic-updates": "off"
+  }
+}
