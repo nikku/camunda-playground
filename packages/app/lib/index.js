@@ -11,10 +11,11 @@ const app = express();
 const staticDirectory = path.join(__dirname, '..', '..', 'client', 'public');
 
 const {
-  readFile
+  readFile,
+  startCamunda,
+  stopCamunda,
+  deployDiagram
 } = require('./util');
-
-const deploy = require('./util/deploy');
 
 
 async function failSafe(req, res, next) {
