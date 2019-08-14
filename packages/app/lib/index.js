@@ -78,18 +78,6 @@ async function create(options) {
     };
   });
 
-  app.put('/api/run', failSafe, async (req, res, next) => {
-    try {
-      starting = starting || startCamunda();
-
-      await starting;
-
-      return res.status(200).json({});
-    } catch (err) {
-      return res.status(500).json({ message: err.message });
-    }
-  });
-
   app.get('/api/hello', failSafe, async (req, res, next) => {
     res.send('COOL');
   });
@@ -105,15 +93,13 @@ async function create(options) {
 
   const port = await getPort({ port: options.port });
 
-  new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     app.listen(port, (err) => {
       if (err) {
         return reject(err);
       }
 
-      console.log(`camunda-playground backend listening on port ${port}!`);
-
-      return resolve();
+      return resolve(`http://localhost:${port}`);
     });
   });
 
