@@ -29,7 +29,9 @@
   "dependencies": {
     "body-parser": "^1.18.3",
     "express": "^4.17.1",
-    "min-dash": "^3.4.0"
+    "get-port": "^5.0.0",
+    "min-dash": "^3.4.0",
+    "mri": "^1.1.4"
   },
   "devDependencies": {
     "chai": "^4.2.0",

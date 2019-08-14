@@ -2,24 +2,44 @@ const express = require('express')
 
 const path = require('path');
 
-const app = express();
+const getPort = require('get-port');
 
-const port = 3000;
+const app = express();
 
 const staticDirectory = path.join(__dirname, '..', '..', 'inspector', 'public');
 
-// api
 
-app.get('/api/hello', (req, res, next) => {
-  res.sendFile(path.join(staticDirectory, 'index.html'));
-});
+async function create(options) {
 
-// static resources
+  // api
 
-app.use('/', express.static(staticDirectory));
+  app.get('/api/hello', (req, res, next) => {
+    res.send('COOL');
+  });
 
-app.get('/', (req, res, next) => {
-  res.sendFile(path.join(staticDirectory, 'index.html'));
-});
+  // static resources
 
-app.listen(port, () => console.log(`camunda-playground backend listening on port ${port}!`));
+  app.use('/', express.static(staticDirectory));
+
+  app.get('/', (req, res, next) => {
+    res.sendFile(path.join(staticDirectory, 'index.html'));
+  });
+
+
+  const port = await getPort({ port: options.port });
+
+  new Promise((resolve, reject) => {
+    app.listen(port, (err) => {
+      if (err) {
+        return reject(err);
+      }
+
+      console.log(`camunda-playground backend listening on port ${port}!`);
+
+      return resolve();
+    });
+  });
+
+};
+
+module.exports.create = create;
