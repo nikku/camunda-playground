@@ -78,8 +78,19 @@ async function create(options) {
     };
   });
 
-  app.get('/api/hello', failSafe, async (req, res, next) => {
-    res.send('COOL');
+  app.get('/api/process-instance', failSafe, async (req, res, next) => {
+
+    const state = 'deploying' || 'starting', 'running' || 'finished';
+
+    return res.json({
+      state: state,
+      trace: [
+        { element: 'StartEvent_1', t: 10, duration: 100 },
+        { element: 'ExclusiveGateway_0bpcdba', t: 20, duration: 100 }
+        { element: 'Task_17dipsw', t: 30 }
+      ]
+    });
+
   });
 
   // static resources
