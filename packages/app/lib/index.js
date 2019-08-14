@@ -11,7 +11,10 @@ const app = express();
 const staticDirectory = path.join(__dirname, '..', '..', 'inspector', 'public');
 
 const {
-  readFile
+  readFile,
+  startCamunda,
+  stopCamunda,
+  deployDiagram
 } = require('./util');
 
 
@@ -29,6 +32,7 @@ async function failSafe(req, res, next) {
 
 async function create(options) {
 
+  let starting;
 
   let uploadedDiagram;
 
@@ -72,6 +76,18 @@ async function create(options) {
       uploaded: true,
       mtimeMs: -1
     };
+  });
+
+  app.put('/api/run', failSafe, async (req, res, next) => {
+    try {
+      starting = starting || startCamunda();
+
+      await starting;
+
+      return res.status(200).json({});
+    } catch (err) {
+      return res.status(500).json({ message: err.message });
+    }
   });
 
   app.get('/api/hello', failSafe, async (req, res, next) => {

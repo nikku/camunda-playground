@@ -31,7 +31,8 @@
     "express": "^4.17.1",
     "get-port": "^5.0.0",
     "min-dash": "^3.4.0",
-    "mri": "^1.1.4"
+    "mri": "^1.1.4",
+    "run-camunda": "^2.1.1"
   },
   "devDependencies": {
     "chai": "^4.2.0",
@@ -49,6 +50,7 @@
       "."
     ],
     "ignore": [
+      ".run-camunda/*",
       "tmp/*",
       "test/*"
     ]

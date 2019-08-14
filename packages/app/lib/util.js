@@ -1,5 +1,10 @@
 const fs = require('fs');
 
+const {
+  startCamunda,
+  stopCamunda
+} = require('run-camunda');
+
 function readFile(path) {
 
   const contents = fs.readFileSync(path, 'utf8');
@@ -14,3 +19,5 @@ function readFile(path) {
 }
 
 module.exports.readFile = readFile;
+module.exports.startCamunda = startCamunda;
+module.exports.stopCamunda = stopCamunda;
