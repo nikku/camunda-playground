@@ -16,34 +16,50 @@ const argv = process.argv.slice(2);
 
 const options = mri(argv, {
   default: {
-    port: 3301
+    port: 3301,
+    open: true
   }
 });
+
+
+if (options.help) {
+  console.log('usage: camunda-playground [...options] [diagram.bpmn]');
+
+  process.exit(0);
+}
+
+options.diagram = options._[0];
 
 async function run(options) {
 
   const {
-    open,
-    port
+    diagram,
+    port,
+    open
   } = options;
 
-  const diagram = open ? path.resolve(open) : null;
+  const diagramPath = diagram ? path.resolve(diagram) : null;
 
   const isRunning = await isCamundaRunning();
 
   if (isRunning) {
-    console.log('We are going to use the Camunda instance that you got already running');
+    console.log('Using the Camunda instance that is running on http://localhost:8080');
   } else {
     console.log('Camunda not running yet, fetching and starting it');
 
     await startCamunda();
   }
 
-  const url = await Playground.create({ diagram, port });
+  const url = await Playground.create({
+    diagramPath,
+    port
+  });
 
   console.log(`Playground started at ${url}`);
 
-  await opn(url);
+  if (open) {
+    await opn(url);
+  }
 }
 
 run(options).catch(err => {

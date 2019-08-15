@@ -11,11 +11,14 @@ const app = express();
 const staticDirectory = path.join(__dirname, '..', '..', 'client', 'public');
 
 const {
-  readFile,
-  startCamunda,
-  stopCamunda,
-  deployDiagram
+  readFile
 } = require('./util');
+
+const deployDiagram = require('./util/deploy-diagram');
+
+const startProcessInstance = require('./util/start-process-instance');
+
+const getProcessInstanceDetails = require('./util/get-process-instance-details');
 
 
 async function failSafe(req, res, next) {
@@ -29,38 +32,162 @@ async function failSafe(req, res, next) {
   }
 }
 
-
 async function create(options) {
-
-  let starting;
 
   let uploadedDiagram;
 
-  let localDiagram;
+  let deployment;
+
+  let processDefinition;
+
+  let instance;
+
+  let fetchedDetails;
+
+
+  function getLocalDiagram() {
+    const path = options.diagramPath;
+
+    if (!path) {
+      return null;
+    }
+
+    return readFile(path);
+  }
+
+  async function getInstanceDetails() {
+
+    if (!instance) {
+      return null;
+    }
+
+    const {
+      id
+    } = instance;
+
+    const details = await getProcessInstanceDetails(instance);
+
+    return {
+      id,
+      state: getStateFromDetails(details),
+      trace: getTraceFromDetails(details)
+    };
+  }
+
+  async function deployAndRun() {
+
+    definitions = null;
+    instance = null;
+
+    const diagram = uploadedDiagram || await getLocalDiagram();
+
+    if (!diagram) {
+      return null;
+    }
+
+    deployment = await deployDiagram(diagram);
+
+    processDefinition = deployment.deployedProcessDefinition;
+
+    instance = await startProcessInstance(processDefinition);
+
+    return instance;
+  }
+
+  function getStateFromDetails(details) {
+    const {
+      endTime,
+      canceled
+    } = details.state;
+
+    if (canceled) {
+      return 'canceled';
+    }
+
+    if (!endTime) {
+      return 'running';
+    }
+
+    return 'completed';
+  }
+
+  function getTraceFromDetails(details) {
+
+    const { activityInstances } = details;
+
+    return activityInstances.reduce((instancesById, instance) => {
+
+      const {
+        id,
+        parentActivityInstanceId,
+        activityId,
+        activityType,
+        startTime,
+        endTime,
+        durationInMillis
+      } = instance;
+
+      instancesById[id] = {
+        id,
+        parentActivityInstanceId,
+        activityId,
+        activityType,
+        startTime,
+        endTime,
+        durationInMillis
+      };
+
+      return instancesById;
+    }, {});
+  }
 
   // api //////////////////////
 
-  app.get('/api/diagram', failSafe, async (req, res, next) => {
+  app.put('/api/deploy', failSafe, async (req, res, next) => {
 
-    if (uploadedDiagram) {
-      return res.json(uploadedDiagram);
-    }
+    const diagram = uploadedDiagram || await getLocalDiagram();
 
-    const diagramPath = options.diagram;
-
-    if (!diagramPath) {
-      return res.sendStatus(204);
+    if (!diagram) {
+      return res.sendStatus(400);
     }
 
     try {
-      const file = await readFile(diagramPath);
+      deployment = await deployDiagram(diagram);
 
-      return res.json(file);
+      return res.status(200).json(deployment);
     } catch (err) {
-      console.error('failed to get diagram stats', err);
+      console.error('failed to deploy diagram', err);
+
+      return res.sendStatus(500);
+    }
+  });
+
+  app.put('/api/start', failSafe, async (req, res, next) => {
+
+    if (deployment) {
+      return res.sendStatus(412);
     }
 
-    return res.sendStatus(404);
+    try {
+      instance = await startProcessInstance(deployment);
+
+      return res.status(200).json(instance);
+    } catch (err) {
+      console.error('failed to deploy diagram', err);
+
+      return res.sendStatus(500);
+    }
+  });
+
+  app.get('/api/diagram', failSafe, async (req, res, next) => {
+
+    const diagram = uploadedDiagram || await getLocalDiagram();
+
+    if (!diagram) {
+      return res.sendStatus(404);
+    }
+
+    return res.json(diagram);
   });
 
   app.put('/api/diagram', [ failSafe, bodyParser.json() ], async (req, res, next) => {
@@ -77,21 +204,27 @@ async function create(options) {
       uploaded: true,
       mtimeMs: -1
     };
+
+    try {
+      deployAndRun();
+    } catch (err) {
+      console.error('failed to deploy uploaded diagram', err);
+
+      return res.sendStatus(500);
+    }
+
+    return res.sendStatus(201);
   });
 
   app.get('/api/process-instance', failSafe, async (req, res, next) => {
 
-    const state = 'deploying' || 'starting' || 'running' || 'finished';
+    if (!instance) {
+      return res.sendStatus(412);
+    }
 
-    return res.json({
-      state: state,
-      trace: [
-        { element: 'StartEvent_1', t: 10, duration: 100 },
-        { element: 'ExclusiveGateway_1', t: 20, duration: 100 },
-        { element: 'Task_1', t: 30 }
-      ]
-    });
+    const details = await fetchedDetails;
 
+    return res.json(details);
   });
 
   // static resources
@@ -105,6 +238,34 @@ async function create(options) {
 
   const port = await getPort({ port: options.port });
 
+  setInterval(async function() {
+
+    const t = Date.now();
+
+    try {
+      fetchedDetails = getInstanceDetails();
+
+      await fetchedDetails;
+      console.debug('Fetched instance details (t=%sms)', Date.now() - t);
+    } catch (err) {
+      console.error('Failed to fetch instance details', err);
+    }
+  }, 2000);
+
+
+  setTimeout(async function() {
+
+    try {
+      const instance = await deployAndRun();
+
+      if (instance) {
+        console.log('Process deployed and instance started');
+      }
+    } catch (err) {
+      console.warn('failed to run diagram', err);
+    }
+  }, 1000);
+
   return new Promise((resolve, reject) => {
     app.listen(port, (err) => {
       if (err) {
@@ -113,6 +274,7 @@ async function create(options) {
 
       return resolve(`http://localhost:${port}`);
     });
+
   });
 
 };
