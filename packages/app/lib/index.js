@@ -34,6 +34,8 @@ async function create(options) {
 
   let diagram;
 
+  let runError;
+
   let deployment;
 
   let processDefinition;
@@ -77,16 +79,16 @@ async function create(options) {
   }
 
   function clear() {
-    diagram = null;
     deployment = null;
     processDefinition = null;
     processInstance = null;
+    runError = null;
   }
 
   async function reload() {
 
     try {
-      const diagram = await getDiagram();
+      diagram = await getDiagram();
 
       if (!diagram) {
         console.debug('No diagram to load');
@@ -100,7 +102,7 @@ async function create(options) {
         console.log('Process deployed and instance started');
       }
     } catch (err) {
-      console.warn('Failed to run diagram', err);
+      console.warn('Failed to run diagram: %s', err);
     }
   }
 
@@ -108,14 +110,22 @@ async function create(options) {
 
     clear();
 
-    diagram = newDiagram;
-    deployment = await engine.deployDiagram(newDiagram);
-    processDefinition = deployment.deployedProcessDefinition;
-    processInstance = await engine.startProcessInstance(processDefinition);
+    try {
+      deployment = await engine.deployDiagram(newDiagram);
+      processDefinition = deployment.deployedProcessDefinition;
+      processInstance = await engine.startProcessInstance(processDefinition);
 
-    fetchedDetails = getInstanceDetails();
+      fetchedDetails = getInstanceDetails();
 
-    return processInstance;
+      return processInstance;
+    } catch (err) {
+      runError = {
+        message: err.message,
+        details: err.details
+      };
+
+      throw err;
+    }
   }
 
   function getStateFromDetails(details) {
@@ -173,7 +183,7 @@ async function create(options) {
 
     if (!diagram) {
       return res.status(400).json({
-        error: 'no diagram'
+        message: 'no diagram'
       });
     }
 
@@ -185,7 +195,7 @@ async function create(options) {
       console.error('failed to deploy diagram', err);
 
       return res.status(500).json({
-        error: 'failed to deploy diagram'
+        message: 'failed to deploy diagram'
       });
     }
   });
@@ -194,7 +204,7 @@ async function create(options) {
 
     if (deployment) {
       return res.status(412).json({
-        error: 'no deployment'
+        message: 'no deployment'
       });
     }
 
@@ -206,7 +216,7 @@ async function create(options) {
       console.error('failed to deploy diagram', err);
 
       return res.status(500).json({
-        error: 'failed to start diagram'
+        message: 'failed to start diagram'
       });
     }
   });
@@ -217,7 +227,7 @@ async function create(options) {
 
     if (!diagram) {
       return res.status(404).json({
-        error: 'no diagram'
+        message: 'no diagram'
       });
     }
 
@@ -245,7 +255,7 @@ async function create(options) {
       console.error('failed to deploy uploaded diagram', err);
 
       return res.status(500).json({
-        error: err.message
+        message: err.message
       });
     }
 
@@ -254,10 +264,8 @@ async function create(options) {
 
   app.get('/api/process-instance', ...middlewares, async (req, res, next) => {
 
-    if (!processInstance) {
-      return res.status(412).json({
-        error: 'no process instance'
-      });
+    if (runError) {
+      return res.status(400).json(runError);
     }
 
     const details = await fetchedDetails;
@@ -271,13 +279,13 @@ async function create(options) {
 
     if (!diagram) {
       return res.status(404).json({
-        error: 'no diagram'
+        message: 'no diagram'
       });
     }
 
     if (!diagram.path) {
       return res.status(412).json({
-        error: 'diagram has no path'
+        message: 'diagram has no path'
       });
     }
 
@@ -368,7 +376,7 @@ async function failSafe(req, res, next) {
 function compat(req, res, next) {
 
   res.status = function(status) {
-    this.responseStatus = status;
+    this.statusCode = status;
 
     return this;
   };

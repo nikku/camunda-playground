@@ -29,30 +29,45 @@ function EngineApi(camundaBaseUrl) {
         'accept': 'application/json'
       },
       body: form
-    }).then(res => res.json());
+    });
 
-    const {
-      id,
-      deployedProcessDefinitions
-    } = response;
+    if (response.ok) {
 
-    return {
-      id,
-      deployedProcessDefinitions,
-      deployedProcessDefinition: Object.values(deployedProcessDefinitions)[0]
-    };
+      const {
+        id,
+        deployedProcessDefinitions
+      } = await response.json();
+
+      return {
+        id,
+        deployedProcessDefinitions,
+        deployedProcessDefinition: Object.values(deployedProcessDefinitions)[0]
+      };
+    }
+
+    const details = await response.json();
+
+    throw responseError('deployment failed', response, details);
   }
 
   async function startProcessInstance(definition) {
 
-    return await fetch(`${baseUrl}/process-definition/${definition.id}/start`, {
+    const response = await fetch(`${baseUrl}/process-definition/${definition.id}/start`, {
       method: 'POST',
       headers: {
         'accept': 'application/json',
         'content-type': 'application/json'
       },
       body: JSON.stringify({})
-    }).then(res => res.json());
+    });
+
+    if (response.ok) {
+      return response.json();
+    }
+
+    const details = await response.json();
+
+    throw responseError('start process instance failed', response, details);
   }
 
   async function getProcessInstanceDetails(processInstance) {
@@ -99,3 +114,23 @@ function EngineApi(camundaBaseUrl) {
 
 
 module.exports = EngineApi;
+
+
+// helpers //////////////
+
+const parseError = 'ENGINE-09005 Could not parse BPMN process. Errors: \n*';
+
+function responseError(message, response, details) {
+  const error = new Error(message);
+
+  error.details = details;
+  error.response = response;
+
+  // fix engine not exposing details
+  if (details && details.message.startsWith(parseError)) {
+    details.problems = details.message.substring(parseError.length).split(/\s?\n\*\s?/g);
+    details.message = 'ENGINE-09005 Could not parse BPMN process';
+  }
+
+  return error;
+}
