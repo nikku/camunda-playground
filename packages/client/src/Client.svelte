@@ -9,14 +9,19 @@
 
   let loaderVisible = true;
 
-  let definitionId;
+  $: definitionId = instanceDetails && instanceDetails.definitionId;
 
-  async function fetchDiagram() {
+  $: diagramLoading = definitionId && fetchDiagram(definitionId).then(_diagram => diagram = _diagram);
+
+  async function fetchDiagram(definitionId) {
     const response = await fetch('/api/diagram');
 
-    const json = await response.json();
+    const diagram = await response.json();
 
-    diagram = json;
+    return {
+      ...diagram,
+      definitionId
+    };
   }
 
   const uploadDiagram = async file => {
@@ -61,24 +66,13 @@
     const response = await fetch('/api/process-instance');
 
     if (response.ok) {
-
       instanceDetails = await response.json();
-
-      const {
-        definitionId: _definitionId
-      } = instanceDetails;
-
-      if (definitionId && definitionId !== _definitionId) {
-        fetchDiagram();
-      }
-
-      definitionId = _definitionId;
+    } else {
+      error = response;
     }
   }
 
-  fetchDiagram();
-
-  const onImportDone = () => {
+  function handleDiagramShown() {
     loaderVisible = false;
   }
 
@@ -108,9 +102,10 @@
 
 <FileDrop onFileDrop={ uploadDiagram }>
   <Diagram
-    xml={ diagram && diagram.contents }
+    diagram={ diagram }
     instanceDetails={ instanceDetails }
-    onImportDone={ onImportDone }
+    onShown={ () => loaderVisible = false }
+    onLoading={ () => loaderVisible = true }
   />
 </FileDrop>
 

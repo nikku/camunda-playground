@@ -12,10 +12,11 @@ const additionalModules = [
 ];
 
 class Viewer extends NavigatedViewer {
-  constructor(options) {
-    super(Object.assign(options, {
+  constructor(options={}) {
+    super({
+      ...options,
       additionalModules
-    }));
+    });
   }
 
   showProcessInstance(processInstance) {

@@ -1,53 +1,58 @@
 <script>
-  import { onMount, afterUpdate } from 'svelte';
+  import { onMount } from 'svelte';
 
   import Viewer from './viewer/Viewer';
 
-  export let xml;
+  export let diagram;
 
   export let instanceDetails;
 
-  export let onImportDone;
+  export let onShown;
+  export let onLoading;
 
-  const viewer = new Viewer({});
+  let containerEl;
+
+  let shownDiagram;
+
+  const viewer = new Viewer();
+
+  onMount(() => {
+    viewer.attachTo(containerEl);
+  });
 
   $: {
-    updateInstance(instanceDetails);
+    if (shownDiagram && instanceDetails && shownDiagram.definitionId === instanceDetails.definitionId) {
+      updateInstance(instanceDetails);
+    }
+  };
+
+  $: {
+    if (diagram) {
+      const diagramLoading = diagram;
+
+      viewer.clearProcessInstance();
+
+      onLoading();
+
+      viewer.importXML(diagram.contents, (error, warnings) => {
+        if (error) {
+          return console.error(error);
+        }
+
+        shownDiagram = diagramLoading;
+
+        // TODO: remove
+        setTimeout(onShown, 500);
+      });
+    }
   };
 
   function updateInstance(details) {
 
     viewer.clearProcessInstance();
 
-    if (lastXML) {
-      viewer.showProcessInstance(details);
-    }
+    viewer.showProcessInstance(details);
   }
-
-  let lastXML = null;
-
-  let container;
-
-  onMount(() => {
-    viewer.attachTo(container);
-  });
-
-  afterUpdate(() => {
-    if (!lastXML || lastXML !== xml) {
-      viewer.clearProcessInstance();
-
-      viewer.importXML(xml, (error, warnings) => {
-        if (error) {
-          console.error(error);
-        }
-
-        lastXML = xml;
-
-        // TODO: remove
-        setTimeout(onImportDone, 500);
-      });
-    }
-  });
 </script>
 
 <style>
@@ -64,4 +69,4 @@
   }
 </style>
 
-<div bind:this={container}></div>
+<div bind:this={containerEl}></div>
