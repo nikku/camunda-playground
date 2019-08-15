@@ -1,5 +1,5 @@
 {
-  "name": "client",
+  "name": "camunda-playground-client",
   "version": "0.0.0",
   "private": true,
   "devDependencies": {
