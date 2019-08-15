@@ -322,28 +322,25 @@ async function create(options) {
   setTimeout(reload, 1000);
 
 
-  if (options.diagramPath) {
-
-    let localDiagram;
+  if (diagramPath) {
 
     setInterval(async function() {
 
-      const t = Date.now();
-
       try {
-        newLocalDiagram = await getLocalDiagram();
+        let newDiagram = await getLocalDiagram();
 
-        if (localDiagram && newLocalDiagram.mtimeMs !== localDiagram.mtimeMs) {
+        let tsOld = diagram ? diagram.mtimeMs : -1;
+        let tsNew = newDiagram ? newDiagram.mtimeMs : -1;
+
+
+        if (tsOld < tsNew) {
           // diagram changed externally, reloading
-          console.debug('Fetched instance details (t=%sms)', Date.now() - t);
+          console.debug('Diagram changed externally, reloading');
+
+          reload();
         }
-
-        localDiagram = newLocalDiagram;
-
-        await fetchedDetails;
-        console.debug('Fetched instance details (t=%sms)', Date.now() - t);
       } catch (err) {
-        console.error('Failed to fetch instance details', err);
+        console.error('External change check failed', err);
       }
     }, 2000);
   }
