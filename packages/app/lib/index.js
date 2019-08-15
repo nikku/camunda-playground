@@ -202,7 +202,7 @@ async function create(options) {
 
   app.post('/api/process-instance/start', ...middlewares, async (req, res, next) => {
 
-    if (deployment) {
+    if (!deployment) {
       return res.status(412).json({
         message: 'no deployment'
       });
