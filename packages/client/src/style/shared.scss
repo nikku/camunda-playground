@@ -1,0 +1,25 @@
+@mixin button($color, $fill: true, $backgroundColor: scale-color($color, $lightness: +10%)) {
+
+  @if lightness($color) < 50% {
+    color: white;
+  } @else {
+    color: black;
+  }
+
+  @if $fill {
+    background: $backgroundColor;
+  }
+
+  border: solid 1px $color;
+  border-radius: 3px;
+
+  padding: 6px 12px;
+  font: 14px monospace;
+  text-decoration: none;
+  display: block;
+  white-space: nowrap;
+
+  &:hover {
+    background: $color;
+  }
+}

@@ -1,3 +1,5 @@
+@import "./shared.scss";
+
 @import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css");
 
 html,
@@ -10,14 +12,9 @@ body {
 
 .element-overlay {
   background: #FFF;
-  border-radius: 2px;
+  border-radius: 3px;
   border: solid 1px #E0E0E0;
-  padding: 6px 12px;
   color: #444;
-  font: 14px monospace;
-  text-decoration: none;
-  display: block;
-  white-space: nowrap;
 }
 
 .element-overlay:hover {
@@ -25,11 +22,5 @@ body {
 }
 
 .element-overlay.info {
-  background: #3399ff;
-  border: solid 1px #0073e6;
-  color: white;
-}
-
-.element-overlay.info:hover {
-  background: #0073e6;
+  @include button(#0073e6);
 }

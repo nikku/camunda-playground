@@ -109,21 +109,15 @@
 </script>
 
 <style lang="scss">
+
+  @import "shared.scss";
+
   .diagram-name {
-    background: #FFF;
-    border-radius: 2px;
-    border: solid 1px #E0E0E0;
-    padding: 6px 12px;
-    color: #444;
-    font: 14px monospace;
+    @include button(#E0E0E0, false);
+
     left: 20px;
     position: absolute;
-    text-decoration: none;
     top: 20px;
-  }
-
-  .diagram-name:hover {
-    background: #E0E0E0;
   }
 
   .run-error {
