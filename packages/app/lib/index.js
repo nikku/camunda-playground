@@ -10,7 +10,7 @@ const bodyParser = require('body-parser');
 
 const app = express();
 
-const staticDirectory = path.join(__dirname, '..', '..', 'client', 'public');
+const staticDirectory = path.resolve(__dirname + '/../static');
 
 const {
   readFile
