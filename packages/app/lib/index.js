@@ -16,11 +16,7 @@ const {
   readFile
 } = require('./util');
 
-const deployDiagram = require('./util/deploy-diagram');
-
-const startProcessInstance = require('./util/start-process-instance');
-
-const getProcessInstanceDetails = require('./util/get-process-instance-details');
+const EngineApi = require('./engine-api');
 
 
 async function failSafe(req, res, next) {
@@ -36,16 +32,23 @@ async function failSafe(req, res, next) {
 
 async function create(options) {
 
+  const engine = new EngineApi(options.camundaBase || 'http://localhost:8080');
+
   let uploadedDiagram;
+
+  let diagram;
 
   let deployment;
 
   let processDefinition;
 
-  let instance;
+  let processInstance;
 
   let fetchedDetails;
 
+  function getDiagram() {
+    return uploadedDiagram || getLocalDiagram();
+  }
 
   function getLocalDiagram() {
     const path = options.diagramPath;
@@ -59,15 +62,15 @@ async function create(options) {
 
   async function getInstanceDetails() {
 
-    if (!instance) {
+    if (!processInstance) {
       return null;
     }
 
     const {
       id
-    } = instance;
+    } = processInstance;
 
-    const details = await getProcessInstanceDetails(instance);
+    const details = await engine.getProcessInstanceDetails(processInstance);
 
     return {
       id,
@@ -76,22 +79,42 @@ async function create(options) {
     };
   }
 
-  async function deployAndRun() {
+  function clear() {
+    diagram = null;
+    deployment = null;
+    processDefinition = null;
+    processInstance = null;
+  }
 
-    definitions = null;
-    instance = null;
+  async function reload() {
 
-    const diagram = uploadedDiagram || await getLocalDiagram();
+    try {
+      const diagram = await getDiagram();
 
-    if (!diagram) {
-      return null;
+      if (!diagram) {
+        console.debug('No diagram to load');
+
+        return clear();
+      }
+
+      const processInstance = await deployAndRun(diagram);
+
+      if (processInstance) {
+        console.log('Process deployed and instance started');
+      }
+    } catch (err) {
+      console.warn('Failed to run diagram', err);
     }
+  }
 
-    deployment = await deployDiagram(diagram);
+  async function deployAndRun(newDiagram) {
 
+    clear();
+
+    diagram = newDiagram;
+    deployment = await engine.deployDiagram(newDiagram);
     processDefinition = deployment.deployedProcessDefinition;
-
-    instance = await startProcessInstance(processDefinition);
+    instance = await engine.startProcessInstance(processDefinition);
 
     return instance;
   }
@@ -147,20 +170,24 @@ async function create(options) {
 
   app.put('/api/deploy', failSafe, async (req, res, next) => {
 
-    const diagram = uploadedDiagram || await getLocalDiagram();
+    const diagram = getDiagram();
 
     if (!diagram) {
-      return res.sendStatus(400);
+      return res.status(400).json({
+        error: 'no diagram'
+      });
     }
 
     try {
       deployment = await deployDiagram(diagram);
 
-      return res.status(200).json(deployment);
+      return res.json(deployment);
     } catch (err) {
       console.error('failed to deploy diagram', err);
 
-      return res.sendStatus(500);
+      return res.status(500).json({
+        error: 'failed to deploy diagram'
+      });
     }
   });
 
@@ -177,13 +204,15 @@ async function create(options) {
     } catch (err) {
       console.error('failed to deploy diagram', err);
 
-      return res.sendStatus(500);
+      return res.status(500).json({
+        error: 'failed to start diagram'
+      });
     }
   });
 
   app.get('/api/diagram', failSafe, async (req, res, next) => {
 
-    const diagram = uploadedDiagram || await getLocalDiagram();
+    const diagram = await getDiagram();
 
     if (!diagram) {
       return res.sendStatus(404);
@@ -212,16 +241,20 @@ async function create(options) {
     } catch (err) {
       console.error('failed to deploy uploaded diagram', err);
 
-      return res.sendStatus(500);
+      return res.status(500).json({
+        error: err.message
+      });
     }
 
-    return res.sendStatus(201);
+    return res.status(201).json({});
   });
 
   app.get('/api/process-instance', failSafe, async (req, res, next) => {
 
     if (!instance) {
-      return res.sendStatus(412);
+      return res.status(412).json({
+        error: 'no process instance'
+      });
     }
 
     const details = await fetchedDetails;
@@ -231,7 +264,7 @@ async function create(options) {
 
   app.post('/api/diagram/open-external', failSafe, async (req, res, next) => {
 
-    const diagram = uploadedDiagram || await getLocalDiagram();
+    const diagram = getDiagram();
 
     if (!diagram) {
       return res.status(404).json({
@@ -251,7 +284,7 @@ async function create(options) {
 
     await opn(diagram.path, app ? { app } : {});
 
-    return res.sendStatus(200);
+    return res.json({});
   });
 
 
@@ -281,18 +314,35 @@ async function create(options) {
   }, 2000);
 
 
-  setTimeout(async function() {
+  setTimeout(reload, 1000);
 
-    try {
-      const instance = await deployAndRun();
 
-      if (instance) {
-        console.log('Process deployed and instance started');
+  if (options.diagramPath) {
+
+    let localDiagram;
+
+    setInterval(async function() {
+
+      const t = Date.now();
+
+      try {
+        newLocalDiagram = await getLocalDiagram();
+
+        if (localDiagram && newLocalDiagram.mtimeMs !== localDiagram.mtimeMs) {
+          // diagram changed externally, reloading
+          console.debug('Fetched instance details (t=%sms)', Date.now() - t);
+        }
+
+        localDiagram = newLocalDiagram;
+
+        await fetchedDetails;
+        console.debug('Fetched instance details (t=%sms)', Date.now() - t);
+      } catch (err) {
+        console.error('Failed to fetch instance details', err);
       }
-    } catch (err) {
-      console.warn('failed to run diagram', err);
-    }
-  }, 1000);
+    }, 2000);
+  }
+
 
   return new Promise((resolve, reject) => {
     app.listen(port, (err) => {
