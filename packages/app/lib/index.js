@@ -202,14 +202,16 @@ async function create(options) {
 
   app.post('/api/process-instance/start', ...middlewares, async (req, res, next) => {
 
-    if (!deployment) {
+    if (!processDefinition) {
       return res.status(412).json({
-        message: 'no deployment'
+        message: 'no deployed process definition'
       });
     }
 
     try {
-      processInstance = await engine.startProcessInstance(deployment);
+      processInstance = await engine.startProcessInstance(processDefinition);
+
+      console.log('process instance restarted');
 
       return res.json(processInstance);
     } catch (err) {
