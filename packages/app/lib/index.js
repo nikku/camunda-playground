@@ -32,6 +32,8 @@ async function failSafe(req, res, next) {
 
 async function create(options) {
 
+  const diagramPath = options.diagramPath;
+
   const engine = new EngineApi(options.camundaBase || 'http://localhost:8080');
 
   let uploadedDiagram;
@@ -51,13 +53,12 @@ async function create(options) {
   }
 
   function getLocalDiagram() {
-    const path = options.diagramPath;
 
-    if (!path) {
+    if (!diagramPath) {
       return null;
     }
 
-    return readFile(path);
+    return readFile(diagramPath);
   }
 
   async function getInstanceDetails() {
@@ -114,9 +115,9 @@ async function create(options) {
     diagram = newDiagram;
     deployment = await engine.deployDiagram(newDiagram);
     processDefinition = deployment.deployedProcessDefinition;
-    instance = await engine.startProcessInstance(processDefinition);
+    processInstance = await engine.startProcessInstance(processDefinition);
 
-    return instance;
+    return processInstance;
   }
 
   function getStateFromDetails(details) {
@@ -194,13 +195,15 @@ async function create(options) {
   app.put('/api/start', failSafe, async (req, res, next) => {
 
     if (deployment) {
-      return res.sendStatus(412);
+      return res.status(412).json({
+        error: 'no deployment'
+      });
     }
 
     try {
-      instance = await startProcessInstance(deployment);
+      processInstance = await startProcessInstance(deployment);
 
-      return res.status(200).json(instance);
+      return res.status(200).json(processInstance);
     } catch (err) {
       console.error('failed to deploy diagram', err);
 
@@ -215,7 +218,9 @@ async function create(options) {
     const diagram = await getDiagram();
 
     if (!diagram) {
-      return res.sendStatus(404);
+      return res.status(404).json({
+        error: 'no diagram'
+      });
     }
 
     return res.json(diagram);
@@ -237,7 +242,7 @@ async function create(options) {
     };
 
     try {
-      deployAndRun();
+      await deployAndRun();
     } catch (err) {
       console.error('failed to deploy uploaded diagram', err);
 
@@ -251,7 +256,7 @@ async function create(options) {
 
   app.get('/api/process-instance', failSafe, async (req, res, next) => {
 
-    if (!instance) {
+    if (!processInstance) {
       return res.status(412).json({
         error: 'no process instance'
       });
