@@ -32,8 +32,6 @@ export function createConnectionMarker(connection) {
 
   const data = getData(points);
 
-  console.log(data);
-
   attr(path, "d", data);
 
   attr(path, {
@@ -48,8 +46,6 @@ export function createConnectionMarker(connection) {
 
 function getData(points) {
   const segments = getSegments(points);
-
-  console.log("segments", segments);
 
   if (segments.length === 1) {
     return getSingleSegmentData(segments[0]);

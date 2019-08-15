@@ -94,7 +94,7 @@
   }
 
   .diagram-name:hover {
-    color: #52B415;
+    background: #E0E0E0;
   }
 </style>
 
@@ -112,7 +112,7 @@
 {#if diagram}
 
   {#if diagram.path}
-    <a class="diagram-name" href="#" title="Open externally" on:click={ handleOpen }>{ diagram.path }</a>
+    <a class="diagram-name" href="#" title="Open externally" on:click={ handleOpen }><i class="fas fa-external-link-alt"></i> { diagram.path }</a>
   {:else}
     <div class="diagram-name">{ diagram.name }</div>
   {/if}

@@ -1,7 +1,35 @@
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css");
+
 html,
 body {
   height: 100%;
   margin: 0;
   overflow: hidden;
   padding: 0;
+}
+
+.element-overlay {
+  background: #FFF;
+  border-radius: 2px;
+  border: solid 1px #E0E0E0;
+  padding: 6px 12px;
+  color: #444;
+  font: 14px monospace;
+  text-decoration: none;
+  display: block;
+  white-space: nowrap;
+}
+
+.element-overlay:hover {
+  background: #E0E0E0;
+}
+
+.element-overlay.info {
+  background: #3399ff;
+  border: solid 1px #0073e6;
+  color: white;
+}
+
+.element-overlay.info:hover {
+  background: #0073e6;
 }
