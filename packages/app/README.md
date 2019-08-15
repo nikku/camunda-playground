@@ -1,5 +1,5 @@
 # camunda-playground
 
 ```
-camunda-playground --open foo.bpmn
+camunda-playground foo.bpmn
 ```
