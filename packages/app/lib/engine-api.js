@@ -1,6 +1,6 @@
 const FormData = require('form-data');
 
-const got = require('got');
+const fetch = require('node-fetch');
 const path = require('path');
 
 
@@ -23,17 +23,18 @@ function EngineApi(camundaBaseUrl) {
       contentType: 'application/xml'
     });
 
-    const response = await got.post(`${baseUrl}/deployment/create`, {
+    const response = await fetch(`${baseUrl}/deployment/create`, {
+      method: 'POST',
       headers: {
         'accept': 'application/json'
       },
       body: form
-    });
+    }).then(res => res.json());
 
     const {
       id,
       deployedProcessDefinitions
-    } = JSON.parse(response.body);
+    } = response;
 
     return {
       id,
@@ -44,15 +45,14 @@ function EngineApi(camundaBaseUrl) {
 
   async function startProcessInstance(definition) {
 
-    const response = await got.post(`${baseUrl}/process-definition/${definition.id}/start`, {
+    return await fetch(`${baseUrl}/process-definition/${definition.id}/start`, {
+      method: 'POST',
       headers: {
         'accept': 'application/json',
         'content-type': 'application/json'
       },
       body: JSON.stringify({})
-    });
-
-    return JSON.parse(response.body);
+    }).then(res => res.json());
   }
 
   async function getProcessInstanceDetails(processInstance) {
@@ -66,7 +66,7 @@ function EngineApi(camundaBaseUrl) {
       activityInstances
     ] = await Promise.all([
       // https://docs.camunda.org/manual/7.11/reference/rest/history/process-instance/get-process-instance/
-      got.get(`${baseUrl}/history/process-instance/${id}`, {
+      fetch(`${baseUrl}/history/process-instance/${id}`, {
         headers: {
           'accept': 'application/json',
           'content-type': 'application/json'
@@ -74,13 +74,13 @@ function EngineApi(camundaBaseUrl) {
       }),
 
       // https://docs.camunda.org/manual/7.11/reference/rest/history/activity-instance/get-activity-instance-query/
-      got.get(`${baseUrl}/history/activity-instance?processInstanceId=${id}`, {
+      fetch(`${baseUrl}/history/activity-instance?processInstanceId=${id}`, {
         headers: {
           'accept': 'application/json',
           'content-type': 'application/json'
         }
       })
-    ].map(result => result.then(r => JSON.parse(r.body))));
+    ].map(result => result.then(res => res.json())));
 
     return {
       id,
