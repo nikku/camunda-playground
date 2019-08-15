@@ -33,6 +33,7 @@ async function failSafe(req, res, next) {
 async function create(options) {
 
   const diagramPath = options.diagramPath;
+  const verbose = options.verbose;
 
   const engine = new EngineApi(options.camundaBase || 'http://localhost:8080');
 
@@ -314,38 +315,33 @@ async function create(options) {
       fetchedDetails = getInstanceDetails();
 
       await fetchedDetails;
-      console.debug('Fetched instance details (t=%sms)', Date.now() - t);
+      verbose && console.debug('Fetched instance details (t=%sms)', Date.now() - t);
     } catch (err) {
       console.error('Failed to fetch instance details', err);
     }
   }, 2000);
 
-
   setTimeout(reload, 1000);
 
+  setInterval(async function() {
 
-  if (diagramPath) {
+    try {
+      let newDiagram = await getDiagram();
 
-    setInterval(async function() {
-
-      try {
-        let newDiagram = await getLocalDiagram();
-
-        let tsOld = diagram ? diagram.mtimeMs : -1;
-        let tsNew = newDiagram ? newDiagram.mtimeMs : -1;
+      let tsOld = diagram ? diagram.mtimeMs : -1;
+      let tsNew = newDiagram ? newDiagram.mtimeMs : -1;
 
 
-        if (tsOld < tsNew) {
-          // diagram changed externally, reloading
-          console.debug('Diagram changed externally, reloading');
+      if (tsOld < tsNew) {
+        // diagram changed externally, reloading
+        console.debug('Diagram changed externally, reloading');
 
-          reload();
-        }
-      } catch (err) {
-        console.error('External change check failed', err);
+        reload();
       }
-    }, 2000);
-  }
+    } catch (err) {
+      console.error('External change check failed', err);
+    }
+  }, 2000);
 
 
   return new Promise((resolve, reject) => {

@@ -18,7 +18,8 @@ const options = mri(argv, {
   default: {
     port: 3301,
     open: true,
-    diagramEditor: process.env.CAMUNDA_PLAYGROUND_DIAGRAM_EDITOR
+    diagramEditor: process.env.CAMUNDA_PLAYGROUND_DIAGRAM_EDITOR,
+    verbose: false
   },
   alias: {
     diagramEditor: 'diagram-editor'
@@ -47,6 +48,7 @@ async function run(options) {
     diagram,
     diagramEditor,
     port,
+    verbose,
     open
   } = options;
 
@@ -65,6 +67,7 @@ async function run(options) {
   const url = await Playground.create({
     diagramEditor,
     diagramPath,
+    verbose,
     port
   });
 
