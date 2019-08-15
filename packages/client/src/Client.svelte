@@ -30,8 +30,7 @@
 
     diagram = {
       contents,
-      name: name,
-      path: name
+      name
     };
 
     const response = await fetch('/api/diagram', {
