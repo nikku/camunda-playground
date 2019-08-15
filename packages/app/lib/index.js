@@ -2,6 +2,8 @@ const express = require('express')
 
 const path = require('path');
 
+const opn = require('open');
+
 const getPort = require('get-port');
 
 const bodyParser = require('body-parser');
@@ -226,6 +228,30 @@ async function create(options) {
 
     return res.json(details);
   });
+
+  app.post('/api/diagram/open-external', failSafe, async (req, res, next) => {
+
+    if (uploadedDiagram) {
+      return res.status(412).json({
+        error: 'cannot externally open uploaded diagram'
+      });
+    }
+
+    const diagram = await getLocalDiagram();
+
+    if (!diagram) {
+      return res.status(404).json({
+        error: 'no local diagram'
+      });
+    }
+
+    const app = options['diagram-editor'];
+
+    await opn(diagram.path, app ? { app } : {});
+
+    return res.sendStatus(200);
+  });
+
 
   // static resources
 

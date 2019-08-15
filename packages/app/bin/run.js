@@ -23,7 +23,14 @@ const options = mri(argv, {
 
 
 if (options.help) {
-  console.log('usage: camunda-playground [...options] [diagram.bpmn]');
+  console.log(`usage: camunda-playground [...options] [diagram]
+
+  Options:
+    --diagram-editor          tool to edit the diagram in
+
+  Examples:
+    $ camunda-playground --diagram-editor=camunda-modeler foo.bpmn
+`);
 
   process.exit(0);
 }
