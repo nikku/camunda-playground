@@ -2,16 +2,24 @@
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_14syvsh" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="2.0.0-0">
   <bpmn:process id="Process_1joqasx" isExecutable="true">
     <bpmn:startEvent id="StartEvent_1">
-      <bpmn:outgoing>SequenceFlow_0u773jp</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_1nrqpm8</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_0ku7hky</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:sequenceFlow id="SequenceFlow_0u773jp" sourceRef="StartEvent_1" targetRef="Task_1kbanfa" />
     <bpmn:endEvent id="EndEvent_0z68few">
-      <bpmn:incoming>SequenceFlow_1iz6ag6</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0vrfm7c</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_178907l</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:sequenceFlow id="SequenceFlow_1iz6ag6" sourceRef="Task_1kbanfa" targetRef="EndEvent_0z68few" />
-    <bpmn:userTask id="Task_1kbanfa">
-      <bpmn:incoming>SequenceFlow_0u773jp</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_1iz6ag6</bpmn:outgoing>
+    <bpmn:task id="Task_170sc8a">
+      <bpmn:incoming>SequenceFlow_1nrqpm8</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0vrfm7c</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="SequenceFlow_1nrqpm8" sourceRef="StartEvent_1" targetRef="Task_170sc8a" />
+    <bpmn:sequenceFlow id="SequenceFlow_0vrfm7c" sourceRef="Task_170sc8a" targetRef="EndEvent_0z68few" />
+    <bpmn:sequenceFlow id="SequenceFlow_0ku7hky" sourceRef="StartEvent_1" targetRef="Task_1px1sh5" />
+    <bpmn:sequenceFlow id="SequenceFlow_178907l" sourceRef="Task_1px1sh5" targetRef="EndEvent_0z68few" />
+    <bpmn:userTask id="Task_1px1sh5">
+      <bpmn:incoming>SequenceFlow_0ku7hky</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_178907l</bpmn:outgoing>
     </bpmn:userTask>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
@@ -19,19 +27,34 @@
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
         <dc:Bounds x="179" y="220" width="36" height="36" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="SequenceFlow_0u773jp_di" bpmnElement="SequenceFlow_0u773jp">
-        <di:waypoint x="215" y="238" />
-        <di:waypoint x="299" y="238" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="EndEvent_0z68few_di" bpmnElement="EndEvent_0z68few">
         <dc:Bounds x="672" y="220" width="36" height="36" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="SequenceFlow_1iz6ag6_di" bpmnElement="SequenceFlow_1iz6ag6">
-        <di:waypoint x="399" y="238" />
+      <bpmndi:BPMNShape id="Task_170sc8a_di" bpmnElement="Task_170sc8a">
+        <dc:Bounds x="394" y="308" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1nrqpm8_di" bpmnElement="SequenceFlow_1nrqpm8">
+        <di:waypoint x="215" y="238" />
+        <di:waypoint x="257" y="238" />
+        <di:waypoint x="257" y="348" />
+        <di:waypoint x="394" y="348" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0vrfm7c_di" bpmnElement="SequenceFlow_0vrfm7c">
+        <di:waypoint x="494" y="348" />
+        <di:waypoint x="583" y="348" />
+        <di:waypoint x="583" y="238" />
         <di:waypoint x="672" y="238" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="UserTask_0pnyv45_di" bpmnElement="Task_1kbanfa">
-        <dc:Bounds x="299" y="198" width="100" height="80" />
+      <bpmndi:BPMNEdge id="SequenceFlow_0ku7hky_di" bpmnElement="SequenceFlow_0ku7hky">
+        <di:waypoint x="215" y="238" />
+        <di:waypoint x="394" y="238" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_178907l_di" bpmnElement="SequenceFlow_178907l">
+        <di:waypoint x="494" y="238" />
+        <di:waypoint x="672" y="238" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_08bxvdl_di" bpmnElement="Task_1px1sh5">
+        <dc:Bounds x="394" y="198" width="100" height="80" />
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

@@ -113,13 +113,25 @@ export default class ProcessInstance {
 
     let connections = [];
 
+    function isFinished(activity) {
+      return find(processInstance.trace, matchPattern({ activityId: activity.id })).endTime !== null;
+    }
+
     function getConnections(activity) {
       const incoming = filter(activity.incoming, connection => {
-        return find(activities, matchPattern({ id: connection.source.id }));
+        const found = find(activities, matchPattern({ id: connection.source.id }));
+
+        const finished = isFinished(found);
+
+        return found && finished;
       });
 
       const outgoing = filter(activity.outgoing, connection => {
-        return find(activities, matchPattern({ id: connection.target.id }));
+        const found = find(activities, matchPattern({ id: connection.target.id }));
+
+        const finished = isFinished(activity);
+
+        return found && finished;
       });
 
       return [
