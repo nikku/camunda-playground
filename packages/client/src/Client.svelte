@@ -59,22 +59,40 @@
   async function getProcessInstance() {
     const response = await fetch('/api/process-instance');
 
-    processInstance = await response.json();
+    console.log(response);
+
+    if (response.ok) {
+      processInstance = await response.json();
+    }
   }
 
   getDiagram('/api/diagram');
 
-  setInterval(getProcessInstance, 3000);
+  const onImportDone = () => {
+    loaderVisible = false;
+
+    getProcessInstance();
+
+    setInterval(getProcessInstance, 3000);
+  }
 </script>
 
 <style>
   .diagram-name {
-    font: 13px monospace;
+    background: #FFF;
+    border-radius: 2px;
+    border: solid 1px #E0E0E0;
+    padding: 6px 12px;
+    color: #444;
+    font: 14px monospace;
     left: 20px;
     position: absolute;
-    top: 20px;
-
     text-decoration: none;
+    top: 20px;
+  }
+
+  .diagram-name:hover {
+    color: #52B415;
   }
 </style>
 
@@ -84,7 +102,7 @@
   <Diagram
     xml={ diagram && diagram.contents }
     processInstance={ processInstance }
-    onImportDone={ () => loaderVisible = false } />
+    onImportDone={ onImportDone } />
 </FileDrop>
 
 {#if diagram}

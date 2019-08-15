@@ -9,7 +9,7 @@
     "eslint-plugin-import": "^2.18.0",
     "eslint-plugin-svelte3": "^2.6.0",
     "file-drops": "^0.3.0",
-    "min-dash": "^3.5.0",
+    "min-dash": "^3.5.1",
     "node-sass": "^4.12.0",
     "npm-run-all": "^4.1.5",
     "rollup": "^1.10.1",
@@ -36,6 +36,8 @@
     "dev": "run-s build:watch"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^1.2.21"
+    "@fortawesome/fontawesome-svg-core": "^1.2.21",
+    "min-dom": "^3.1.1",
+    "tiny-svg": "^2.2.1"
   }
 }

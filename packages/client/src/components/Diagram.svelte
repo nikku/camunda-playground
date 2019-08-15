@@ -35,7 +35,11 @@
       });
     }
 
-    viewer.showProcessInstance(processInstance);
+    if (processInstance) {
+      viewer.clearProcessInstance();
+
+      viewer.showProcessInstance(processInstance);
+    }
   });
 </script>
 
