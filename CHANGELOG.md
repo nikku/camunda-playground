@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.0.3
+
+* `FEAT`: restart app
+* `FEAT`: link tasklist
+* `FEAT`: handle deploy errors
+
 ## 0.0.2
 
 * `FEAT`: improve responsiveness
