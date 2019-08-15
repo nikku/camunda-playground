@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.0.4
+
+* `FIX`: correct executable
+
 ## 0.0.3
 
 * `FEAT`: restart app
