@@ -15,7 +15,7 @@
 
   $: definitionId = instanceDetails && instanceDetails.definitionId;
 
-  $: diagramLoading = fetchDiagram(definitionId).then(_diagram => {
+  $: loadingDiagram = fetchDiagram(definitionId).then(_diagram => {
     diagram = _diagram;
   });
 
@@ -89,7 +89,7 @@
 
   setInterval(getProcessInstanceDetails, 1000);
 
-  async function startNewInstance() {
+  async function handleRestart() {
     loaderVisible = true;
 
     const response = await fetch('/api/process-instance/start', {
@@ -115,8 +115,8 @@
   .diagram-name {
     @include button(#E0E0E0, false);
 
-    left: 20px;
     position: absolute;
+    left: 20px;
     top: 20px;
   }
 
@@ -136,26 +136,15 @@
   }
 
   .start-new-instance {
-    border-radius: 2px;
-    padding: 6px 12px;
-    font: 14px monospace;
-    right: 20px;
-    position: absolute;
-    text-decoration: none;
-    top: 20px;
-    background: #3399ff;
-    border: solid 1px #0073e6;
-    color: white;
-    cursor: pointer;
-  }
+    @include button(#0073e6);
 
-  .start-new-instance:hover {
-    background: #0073e6;
+    position: absolute;
+    right: 20px;
+    top: 20px;
   }
 
   .start-new-instance.completed {
-    background: #52B415;
-    border-color: #49a013;
+    @include button(#49a013);
   }
 </style>
 
@@ -192,7 +181,7 @@
 
 
 {#if instanceDetails && instanceDetails.state === 'running'}
-  <button class="start-new-instance running" on:click={ startNewInstance }><i class="fas fa-redo"></i> New Instance</button>
+  <button class="start-new-instance running" on:click={ handleRestart }><i class="fas fa-redo"></i> Restart</button>
 {:else}
-  <button class="start-new-instance completed" on:click={ startNewInstance }><i class="fas fa-redo"></i> New Instance</button>
+  <button class="start-new-instance completed" on:click={ handleRestart }><i class="fas fa-redo"></i> Restart</button>
 {/if}
