@@ -1,4 +1,6 @@
 test
 tmp
+.run-camunda
+diagram.bpmn
 .eslintrc
 !static
