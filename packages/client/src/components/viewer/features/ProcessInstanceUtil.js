@@ -3,7 +3,7 @@ import { append, attr, create } from "tiny-svg";
 import { isObject, isUndefined } from "min-dash";
 
 const FILL = '#52B415',
-      STROKE_WIDTH = 4;
+      STROKE_WIDTH = 3;
 
 export function createActivityMarker(activity) {
   const circle = create('circle');

@@ -7,7 +7,7 @@
     "url": "https://github.com/nikku"
   },
   "bin": {
-    "camunda-playground": "./bin/camunda-playground"
+    "camunda-playground": "node ./bin/camunda-playground"
   },
   "license": "MIT",
   "repository": {
@@ -23,7 +23,7 @@
   ],
   "scripts": {
     "dev": "nodemon",
-    "start": "./bin/camunda-playground",
+    "start": "node ./bin/camunda-playground",
     "test": "mocha test --exit",
     "lint": "eslint .",
     "auto-test": "npm test -- --watch"

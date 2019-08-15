@@ -88,6 +88,24 @@
   }
 
   setInterval(getProcessInstanceDetails, 1000);
+
+  async function startNewInstance() {
+    loaderVisible = true;
+
+    const response = await fetch('/api/process-instance/start', {
+      method: 'POST'
+    });
+
+    const json = await response.json();
+
+    setTimeout(() => {
+      getProcessInstanceDetails();
+
+      console.log('new instance started', json);
+
+      loaderVisible = false;
+    }, 500);
+  }
 </script>
 
 <style lang="scss">
@@ -122,6 +140,29 @@
       white-space: pre-wrap;
     }
   }
+
+  .start-new-instance {
+    border-radius: 2px;
+    padding: 6px 12px;
+    font: 14px monospace;
+    right: 20px;
+    position: absolute;
+    text-decoration: none;
+    top: 20px;
+    background: #3399ff;
+    border: solid 1px #0073e6;
+    color: white;
+    cursor: pointer;
+  }
+
+  .start-new-instance:hover {
+    background: #0073e6;
+  }
+
+  .start-new-instance.completed {
+    background: #52B415;
+    border-color: #49a013;
+  }
 </style>
 
 <Loader visible={ loaderVisible }></Loader>
@@ -153,4 +194,11 @@
     <div class="diagram-name">{ diagram.name }</div>
   {/if}
 
+{/if}
+
+
+{#if instanceDetails && instanceDetails.state === 'running'}
+  <button class="start-new-instance running" on:click={ startNewInstance }><i class="fas fa-redo"></i> New Instance</button>
+{:else}
+  <button class="start-new-instance completed" on:click={ startNewInstance }><i class="fas fa-redo"></i> New Instance</button>
 {/if}

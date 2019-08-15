@@ -74,8 +74,6 @@ export default class ProcessInstance {
   }
 
   show(processInstance) {
-    console.log(processInstance);
-
     const { id } = processInstance;
 
     const connections = this._getConnections(processInstance);
@@ -84,12 +82,15 @@ export default class ProcessInstance {
       this._addConnectionMarker(connection);
     });
 
+    // activities that have NOT ended
     const activities = this._getActivities(processInstance, activity => !activity.endTime);
 
     activities.forEach(activity => {
       // this._addActivityMarker(activity);
 
-      this._addActivityButton(activity, id);
+      const activityId = find(processInstance.trace, a => a.activityId === activity.id).id.split(':')[1];
+
+      this._addActivityButton(activity, activityId, id);
     });
   }
 
@@ -137,9 +138,9 @@ export default class ProcessInstance {
     return connections;
   }
 
-  _addActivityButton(activity, processInstanceId) {
+  _addActivityButton(activity, activityId, processInstanceId) {
     if (is(activity, 'bpmn:UserTask')) {
-      const url = `http://localhost:8080/camunda/app/tasklist/default/#/?searchQuery=%5B%7B%22type%22:%22processInstanceId%22,%22operator%22:%22eq%22,%22value%22:%22${ processInstanceId }%22,%22name%22:%22%22%7D%5D&filter=f331efa7-bf6c-11e9-8f11-0028f8fb8528&sorting=%5B%7B%22sortBy%22:%22created%22,%22sortOrder%22:%22desc%22%7D%5D`;
+      const url = `http://localhost:8080/camunda/app/tasklist/default/#/?searchQuery=%5B%7B%22type%22:%22processInstanceId%22,%22operator%22:%22eq%22,%22value%22:%22${ processInstanceId }%22,%22name%22:%22%22%7D%5D&filter=f331efa7-bf6c-11e9-8f11-0028f8fb8528&sorting=%5B%7B%22sortBy%22:%22created%22,%22sortOrder%22:%22desc%22%7D%5D&task=${ activityId }`;
 
       this._addOverlay({
         element: activity,
