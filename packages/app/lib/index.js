@@ -113,6 +113,8 @@ async function create(options) {
     processDefinition = deployment.deployedProcessDefinition;
     processInstance = await engine.startProcessInstance(processDefinition);
 
+    fetchedDetails = getInstanceDetails();
+
     return processInstance;
   }
 
@@ -313,7 +315,7 @@ async function create(options) {
     }
   }, 2000);
 
-  setTimeout(reload, 1000);
+  setTimeout(reload, 0);
 
   setInterval(async function() {
 
@@ -322,7 +324,6 @@ async function create(options) {
 
       let tsOld = diagram ? diagram.mtimeMs : -1;
       let tsNew = newDiagram ? newDiagram.mtimeMs : -1;
-
 
       if (tsOld < tsNew) {
         // diagram changed externally, reloading
@@ -333,7 +334,7 @@ async function create(options) {
     } catch (err) {
       console.error('External change check failed', err);
     }
-  }, 2000);
+  }, 500);
 
 
   return new Promise((resolve, reject) => {
