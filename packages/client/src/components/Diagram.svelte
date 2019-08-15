@@ -12,6 +12,7 @@
 
   let containerEl;
 
+  let loadingDiagram;
   let shownDiagram;
 
   const viewer = new Viewer();
@@ -26,25 +27,32 @@
     }
   };
 
-  $: {
-    if (diagram) {
-      const diagramLoading = diagram;
+  $: loadingDiagram ? onLoading() : onShown();
 
-      viewer.clearProcessInstance();
+  $: diagram && checkReload(diagram);
 
-      onLoading();
+  function checkReload(newDiagram) {
 
-      viewer.importXML(diagram.contents, (error, warnings) => {
-        if (error) {
-          return console.error(error);
-        }
+    const currentDiagram = loadingDiagram || shownDiagram;
 
-        shownDiagram = diagramLoading;
+    if (currentDiagram && currentDiagram.contents === newDiagram.contents) {
+      shownDiagram = newDiagram;
 
-        // TODO: remove
-        setTimeout(onShown, 500);
-      });
+      return;
     }
+
+    loadingDiagram = newDiagram;
+
+    viewer.clearProcessInstance();
+
+    viewer.importXML(newDiagram.contents, (error, warnings) => {
+      if (error) {
+        return console.error(error);
+      }
+
+      shownDiagram = loadingDiagram;
+      loadingDiagram = null;
+    });
   };
 
   function updateInstance(details) {
