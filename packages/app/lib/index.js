@@ -1,34 +1,25 @@
-const express = require('express');
-
 const path = require('path');
+
+const polka = require('polka');
+
+const sirv = require('sirv');
 
 const opn = require('open');
 
 const getPort = require('get-port');
 
-const bodyParser = require('body-parser');
-
-const app = express();
-
-const staticDirectory = path.resolve(__dirname + '/../static');
+const { json } = require('body-parser');
 
 const {
   readFile
 } = require('./util');
 
+const middlewares = [ failSafe, compat ];
+
 const EngineApi = require('./engine-api');
 
 
-async function failSafe(req, res, next) {
-
-  try {
-    await next();
-  } catch (err) {
-    console.error('unhandled route error', err);
-
-    res.status(500).send();
-  }
-}
+const staticDirectory = path.resolve(__dirname + '/../static');
 
 async function create(options) {
 
@@ -36,6 +27,8 @@ async function create(options) {
   const verbose = options.verbose;
 
   const engine = new EngineApi(options.camundaBase || 'http://localhost:8080');
+
+  const app = polka();
 
   let uploadedDiagram;
 
@@ -172,7 +165,7 @@ async function create(options) {
 
   // api //////////////////////
 
-  app.put('/api/deploy', failSafe, async (req, res, next) => {
+  app.put('/api/deploy', ...middlewares, async (req, res, next) => {
 
     const diagram = getDiagram();
 
@@ -195,7 +188,7 @@ async function create(options) {
     }
   });
 
-  app.post('/api/process-instance/start', failSafe, async (req, res, next) => {
+  app.post('/api/process-instance/start', ...middlewares, async (req, res, next) => {
 
     if (deployment) {
       return res.status(412).json({
@@ -206,7 +199,7 @@ async function create(options) {
     try {
       processInstance = await engine.startProcessInstance(deployment);
 
-      return res.status(200).json(processInstance);
+      return res.json(processInstance);
     } catch (err) {
       console.error('failed to deploy diagram', err);
 
@@ -216,7 +209,7 @@ async function create(options) {
     }
   });
 
-  app.get('/api/diagram', failSafe, async (req, res, next) => {
+  app.get('/api/diagram', ...middlewares, async (req, res, next) => {
 
     const diagram = await getDiagram();
 
@@ -229,7 +222,7 @@ async function create(options) {
     return res.json(diagram);
   });
 
-  app.put('/api/diagram', [ failSafe, bodyParser.json() ], async (req, res, next) => {
+  app.put('/api/diagram', ...middlewares, json(), async (req, res, next) => {
 
     const {
       contents,
@@ -257,7 +250,7 @@ async function create(options) {
     return res.status(201).json({});
   });
 
-  app.get('/api/process-instance', failSafe, async (req, res, next) => {
+  app.get('/api/process-instance', ...middlewares, async (req, res, next) => {
 
     if (!processInstance) {
       return res.status(412).json({
@@ -270,7 +263,7 @@ async function create(options) {
     return res.json(details);
   });
 
-  app.post('/api/diagram/open-external', failSafe, async (req, res, next) => {
+  app.post('/api/diagram/open-external', ...middlewares, async (req, res, next) => {
 
     const diagram = getDiagram();
 
@@ -298,12 +291,11 @@ async function create(options) {
 
   // static resources
 
-  app.use('/', express.static(staticDirectory));
+  app.use('/', sirv(staticDirectory));
 
-  app.get('/', failSafe, (req, res, next) => {
+  app.get('/', (req, res, next) => {
     res.sendFile(path.join(staticDirectory, 'index.html'));
   });
-
 
   const port = await getPort({ port: options.port });
 
@@ -358,3 +350,35 @@ async function create(options) {
 }
 
 module.exports.create = create;
+
+// helpers ///////////////
+
+async function failSafe(req, res, next) {
+
+  try {
+    await next();
+  } catch (err) {
+    console.error('unhandled route error', err);
+
+    res.status(500).send();
+  }
+}
+
+function compat(req, res, next) {
+
+  res.status = function(status) {
+    this.responseStatus = status;
+
+    return this;
+  };
+
+  res.json = function(obj) {
+    const json = JSON.stringify(obj);
+
+    this.setHeader('Content-Type', 'application/json');
+
+    return this.end(json);
+  };
+
+  next();
+}
