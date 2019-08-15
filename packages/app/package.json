@@ -7,7 +7,7 @@
     "url": "https://github.com/nikku"
   },
   "bin": {
-    "camunda-playground": "node ./bin/camunda-playground"
+    "camunda-playground": "./bin/camunda-playground"
   },
   "license": "MIT",
   "repository": {
