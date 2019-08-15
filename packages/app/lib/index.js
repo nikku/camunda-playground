@@ -202,8 +202,6 @@ async function create(options) {
     uploadedDiagram = {
       contents,
       name: name,
-      path: name,
-      uploaded: true,
       mtimeMs: -1
     };
 
@@ -245,7 +243,9 @@ async function create(options) {
       });
     }
 
-    const app = options['diagram-editor'];
+    console.log('Opening diagram in external tool...');
+
+    const app = options.diagramEditor;
 
     await opn(diagram.path, app ? { app } : {});
 

@@ -1,13 +1,16 @@
 const fs = require('fs');
+const path = require('path');
 
-function readFile(path) {
 
-  const contents = fs.readFileSync(path, 'utf8');
+function readFile(filePath) {
 
-  const stats = fs.statSync(path);
+  const contents = fs.readFileSync(filePath, 'utf8');
+
+  const stats = fs.statSync(filePath);
 
   return {
-    path,
+    path: filePath,
+    name: path.basename(filePath),
     contents,
     mtimeMs: stats.mtimeMs
   };

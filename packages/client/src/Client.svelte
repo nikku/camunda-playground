@@ -45,23 +45,36 @@
     console.log(json);
   }
 
-  getDiagram('/api/diagram');
+  async function handleOpen(event) {
+    event.preventDefault();
 
-  const getProcessInstance = async () => {
+    await fetch('/api/diagram/open-external', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+  }
+
+  async function getProcessInstance() {
     const response = await fetch('/api/process-instance');
 
     processInstance = await response.json();
   }
+
+  getDiagram('/api/diagram');
 
   setInterval(getProcessInstance, 3000);
 </script>
 
 <style>
   .diagram-name {
-    font-family: 'Arial', sans-serif;
+    font: 13px monospace;
     left: 20px;
     position: absolute;
     top: 20px;
+
+    text-decoration: none;
   }
 </style>
 
@@ -74,4 +87,11 @@
     onImportDone={ () => loaderVisible = false } />
 </FileDrop>
 
-<div class="diagram-name" title={ diagram && diagram.path }>{ diagram && diagram.name }</div>
+{#if diagram}
+
+  {#if diagram.path}
+    <a class="diagram-name" href="#" title="Open externally" on:click={ handleOpen }>{ diagram.path }</a>
+  {:else}
+    <div class="diagram-name">{ diagram.name }</div>
+  {/if}
+{/if}
