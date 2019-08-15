@@ -238,7 +238,7 @@ async function create(options) {
     };
 
     try {
-      await deployAndRun();
+      await deployAndRun(uploadedDiagram);
     } catch (err) {
       console.error('failed to deploy uploaded diagram', err);
 
