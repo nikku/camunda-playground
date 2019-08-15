@@ -25,12 +25,12 @@
   },
   "scripts": {
     "test": "echo \"no tests\"",
-    "lint": "eslint --ext js,svelte .",
+    "lint": "echo \"no lint\"",
     "build": "run-p build:*:prod",
     "build:watch": "run-p build:*:watch",
     "build:js:prod": "rollup -c",
     "build:js:watch": "rollup -c -w",
-    "build:css": "node-sass --include-path=node_modules src/style/global.scss -o public",
+    "build:css": "node-sass --include-path=node_modules src/style/global.scss -o ../app/static",
     "build:css:prod": "run-s \"build:css -- --output-style compressed\"",
     "build:css:watch": "run-s build:css \"build:css -- -w\"",
     "dev": "run-s build:watch"
