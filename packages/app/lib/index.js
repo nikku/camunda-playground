@@ -68,13 +68,15 @@ async function create(options) {
     }
 
     const {
-      id
+      id,
+      definitionId
     } = processInstance;
 
     const details = await engine.getProcessInstanceDetails(processInstance);
 
     return {
       id,
+      definitionId,
       state: getStateFromDetails(details),
       trace: getTraceFromDetails(details)
     };
@@ -192,7 +194,7 @@ async function create(options) {
     }
   });
 
-  app.put('/api/start', failSafe, async (req, res, next) => {
+  app.post('/api/process-instance/start', failSafe, async (req, res, next) => {
 
     if (deployment) {
       return res.status(412).json({
