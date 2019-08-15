@@ -5,19 +5,21 @@
 
   let diagram = null;
 
-  let processInstance = null;
+  let instanceDetails = null;
 
   let loaderVisible = true;
 
-  const getDiagram = async url => {
-    const response = await fetch(url);
+  let definitionId;
+
+  async function fetchDiagram() {
+    const response = await fetch('/api/diagram');
 
     const json = await response.json();
 
     diagram = json;
   }
 
-  const putDiagram = async file => {
+  const uploadDiagram = async file => {
     const { contents, name } = file;
 
     if (diagram && contents === diagram.contents) {
@@ -56,25 +58,32 @@
     });
   }
 
-  async function getProcessInstance() {
+  async function getProcessInstanceDetails() {
     const response = await fetch('/api/process-instance');
 
-    console.log(response);
-
     if (response.ok) {
-      processInstance = await response.json();
+
+      instanceDetails = await response.json();
+
+      const {
+        definitionId: _definitionId
+      } = instanceDetails;
+
+      if (definitionId && definitionId !== _definitionId) {
+        fetchDiagram();
+      }
+
+      definitionId = _definitionId;
     }
   }
 
-  getDiagram('/api/diagram');
+  fetchDiagram();
 
   const onImportDone = () => {
     loaderVisible = false;
-
-    getProcessInstance();
-
-    setInterval(getProcessInstance, 3000);
   }
+
+  setInterval(getProcessInstanceDetails, 1000);
 </script>
 
 <style>
@@ -98,11 +107,12 @@
 
 <Loader visible={ loaderVisible }></Loader>
 
-<FileDrop onFileDrop={ putDiagram }>
+<FileDrop onFileDrop={ uploadDiagram }>
   <Diagram
     xml={ diagram && diagram.contents }
-    processInstance={ processInstance }
-    onImportDone={ onImportDone } />
+    instanceDetails={ instanceDetails }
+    onImportDone={ onImportDone }
+  />
 </FileDrop>
 
 {#if diagram}

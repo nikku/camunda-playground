@@ -1,22 +1,35 @@
 <script>
   import { onMount, afterUpdate } from 'svelte';
-  
+
   import Viewer from './viewer/Viewer';
 
   export let xml;
 
-  export let processInstance;
+  export let instanceDetails;
 
   export let onImportDone;
 
+  const viewer = new Viewer({});
+
+  $: {
+    updateInstance(instanceDetails);
+  };
+
+  function updateInstance(details) {
+
+    viewer.clearProcessInstance();
+
+    if (lastXML) {
+      viewer.showProcessInstance(details);
+    }
+  }
+
   let lastXML = null;
 
-  let container, viewer;
+  let container;
 
   onMount(() => {
-    viewer = new Viewer({
-      container
-    });
+    viewer.attachTo(container);
   });
 
   afterUpdate(() => {
@@ -33,12 +46,6 @@
         // TODO: remove
         setTimeout(onImportDone, 500);
       });
-    }
-
-    if (processInstance) {
-      viewer.clearProcessInstance();
-
-      viewer.showProcessInstance(processInstance);
     }
   });
 </script>

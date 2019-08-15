@@ -21,7 +21,7 @@ class Viewer extends NavigatedViewer {
   showProcessInstance(processInstance) {
     this.get('processInstance').show(processInstance);
   }
-  
+
   clearProcessInstance() {
     this.get('processInstance').clear();
   }
