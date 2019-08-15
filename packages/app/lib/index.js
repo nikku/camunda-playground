@@ -196,12 +196,14 @@ async function create(options) {
 
     const {
       contents,
+      path,
       name
     } = req.body;
 
     uploadedDiagram = {
       contents,
-      name: name,
+      name,
+      path,
       mtimeMs: -1
     };
 
@@ -229,17 +231,17 @@ async function create(options) {
 
   app.post('/api/diagram/open-external', failSafe, async (req, res, next) => {
 
-    if (uploadedDiagram) {
-      return res.status(412).json({
-        error: 'cannot externally open uploaded diagram'
-      });
-    }
-
-    const diagram = await getLocalDiagram();
+    const diagram = uploadedDiagram || await getLocalDiagram();
 
     if (!diagram) {
       return res.status(404).json({
-        error: 'no local diagram'
+        error: 'no diagram'
+      });
+    }
+
+    if (!diagram.path) {
+      return res.status(412).json({
+        error: 'diagram has no path'
       });
     }
 
