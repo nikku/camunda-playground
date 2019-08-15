@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+'use strict';
 
 const mri = require('mri');
 const path = require('path');
@@ -38,6 +38,7 @@ if (options.help) {
 `);
 
   process.exit(0);
+
 }
 
 options.diagram = options._[0];

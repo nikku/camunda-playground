@@ -6,6 +6,9 @@
     "name": "Nico Rehwaldt",
     "url": "https://github.com/nikku"
   },
+  "bin": {
+    "camunda-playground": "./bin/camunda-playground"
+  },
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -20,7 +23,7 @@
   ],
   "scripts": {
     "dev": "nodemon",
-    "start": "node ./bin/run.js",
+    "start": "./bin/camunda-playground",
     "test": "mocha test --exit",
     "lint": "eslint .",
     "auto-test": "npm test -- --watch"
