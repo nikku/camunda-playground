@@ -1,11 +1,15 @@
 <script>
   import { onMount, afterUpdate } from 'svelte';
   
-  import Viewer from 'bpmn-js/dist/bpmn-navigated-viewer.development.js';
+  import Viewer from './viewer/Viewer';
 
   export let xml;
 
+  export let processInstance;
+
   export let onImportDone;
+
+  let lastXML = null;
 
   let container, viewer;
 
@@ -16,16 +20,22 @@
   });
 
   afterUpdate(() => {
-    if (xml) {
+    if (!lastXML || lastXML !== xml) {
+      viewer.clearProcessInstance();
+
       viewer.importXML(xml, (error, warnings) => {
         if (error) {
           console.error(error);
         }
 
+        lastXML = xml;
+
         // TODO: remove
         setTimeout(onImportDone, 500);
       });
     }
+
+    viewer.showProcessInstance(processInstance);
   });
 </script>
 

@@ -13,11 +13,10 @@
     "directory": "packages/app"
   },
   "keywords": [
-    "Camunda",
-    "Inspector",
+    "BPM",
     "BPMN",
-    "Engine",
-    "Executor"
+    "Camunda",
+    "Engine"
   ],
   "scripts": {
     "dev": "nodemon",

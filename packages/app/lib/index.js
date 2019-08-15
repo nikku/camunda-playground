@@ -8,7 +8,7 @@ const bodyParser = require('body-parser');
 
 const app = express();
 
-const staticDirectory = path.join(__dirname, '..', '..', 'inspector', 'public');
+const staticDirectory = path.join(__dirname, '..', '..', 'client', 'public');
 
 const {
   readFile,
@@ -55,7 +55,10 @@ async function create(options) {
     try {
       const file = await readFile(diagramPath);
 
-      return res.json(file);
+      return res.json({
+        ...file,
+        name: path.basename(diagramPath)
+      });
     } catch (err) {
       console.error('failed to get diagram stats', err);
     }
@@ -72,6 +75,7 @@ async function create(options) {
 
     uploadedDiagram = {
       contents,
+      name: name,
       path: name,
       uploaded: true,
       mtimeMs: -1
@@ -80,14 +84,14 @@ async function create(options) {
 
   app.get('/api/process-instance', failSafe, async (req, res, next) => {
 
-    const state = 'deploying' || 'starting', 'running' || 'finished';
+    const state = 'deploying' || 'starting' || 'running' || 'finished';
 
     return res.json({
       state: state,
       trace: [
         { element: 'StartEvent_1', t: 10, duration: 100 },
-        { element: 'ExclusiveGateway_0bpcdba', t: 20, duration: 100 }
-        { element: 'Task_17dipsw', t: 30 }
+        { element: 'ExclusiveGateway_1', t: 20, duration: 100 },
+        { element: 'Task_1', t: 30 }
       ]
     });
 

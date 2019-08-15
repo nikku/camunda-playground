@@ -3,7 +3,9 @@
   import FileDrop from './components/FileDrop.svelte';
   import Loader from './components/Loader.svelte';
 
-  let name, xml;
+  let diagram = null;
+
+  let processInstance = null;
 
   let loaderVisible = true;
 
@@ -12,22 +14,23 @@
 
     const json = await response.json();
 
-    setDiagram(json);
+    diagram = json;
   }
 
-  const putDiagram = async diagram => {
-    const { contents, name } = diagram;
+  const putDiagram = async file => {
+    const { contents, name } = file;
 
-    if (contents === xml) {
+    if (diagram && contents === diagram.contents) {
       return;
     }
 
     loaderVisible = true;
 
-    setDiagram({
+    diagram = {
       contents,
+      name: name,
       path: name
-    });
+    };
 
     const response = await fetch('/api/diagram', {
       method: 'PUT',
@@ -42,14 +45,15 @@
     console.log(json);
   }
 
-  const setDiagram = ({ contents, path }) => {
-    if (contents) {
-      xml = contents;
-      name = path;
-    };
+  getDiagram('/api/diagram');
+
+  const getProcessInstance = async () => {
+    const response = await fetch('/api/process-instance');
+
+    processInstance = await response.json();
   }
 
-  getDiagram('/api/diagram');
+  setInterval(getProcessInstance, 3000);
 </script>
 
 <style>
@@ -64,7 +68,10 @@
 <Loader visible={ loaderVisible }></Loader>
 
 <FileDrop onFileDrop={ putDiagram }>
-  <Diagram xml={ xml } onImportDone={ () => loaderVisible = false } />
+  <Diagram
+    xml={ diagram && diagram.contents }
+    processInstance={ processInstance }
+    onImportDone={ () => loaderVisible = false } />
 </FileDrop>
 
-<div class="diagram-name">{ name }</div>
+<div class="diagram-name" title={ diagram && diagram.path }>{ diagram && diagram.name }</div>
