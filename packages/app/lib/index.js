@@ -1,4 +1,4 @@
-const express = require('express')
+const express = require('express');
 
 const path = require('path');
 
@@ -183,7 +183,7 @@ async function create(options) {
     }
 
     try {
-      deployment = await deployDiagram(diagram);
+      deployment = await engine.deployDiagram(diagram);
 
       return res.json(deployment);
     } catch (err) {
@@ -204,7 +204,7 @@ async function create(options) {
     }
 
     try {
-      processInstance = await startProcessInstance(deployment);
+      processInstance = await engine.startProcessInstance(deployment);
 
       return res.status(200).json(processInstance);
     } catch (err) {
@@ -355,6 +355,6 @@ async function create(options) {
 
   });
 
-};
+}
 
 module.exports.create = create;
