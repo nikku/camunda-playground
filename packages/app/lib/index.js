@@ -265,15 +265,10 @@ async function create(options) {
       mtimeMs: -1
     };
 
-    try {
-      await deployAndRun(uploadedDiagram);
-    } catch (err) {
+    // deploy asynchronously
+    deployAndRun(uploadedDiagram).catch(err => {
       console.error('failed to deploy uploaded diagram', err);
-
-      return res.status(500).json({
-        message: err.message
-      });
-    }
+    });
 
     return res.status(201).json({});
   });
