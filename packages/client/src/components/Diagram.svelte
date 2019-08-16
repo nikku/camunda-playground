@@ -24,10 +24,10 @@
   });
 
   $: {
-    if (shownDiagram && instanceDetails && shownDiagram.definitionId === instanceDetails.definitionId) {
+    if (shownDiagram && instanceDetails && shownDiagram.hash === instanceDetails.diagramHash) {
       updateInstance(instanceDetails);
     } else {
-      viewer.clearProcessInstance();
+      clearInstance();
     }
   };
 
@@ -61,6 +61,12 @@
 
   let lastDetails = null;
 
+  function clearInstance() {
+    lastDetails = null;
+
+    viewer.clearProcessInstance();
+  }
+
   function updateInstance(details) {
     if (lastDetails && JSON.stringify(lastDetails) === JSON.stringify(details)) {
       return;
@@ -69,7 +75,6 @@
     lastDetails = details;
 
     viewer.clearProcessInstance();
-
     viewer.showProcessInstance(details);
   }
 </script>

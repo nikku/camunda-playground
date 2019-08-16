@@ -13,22 +13,28 @@
 
   $: loaderVisible = diagramLoading && !runError;
 
-  $: definitionId = instanceDetails && instanceDetails.definitionId;
-
-  $: loadingDiagram = fetchDiagram(definitionId).then(_diagram => diagram = _diagram);
+  $: loadingDiagram = checkDiagram(instanceDetails);
 
   $: waitStates = instanceDetails ? Object.values(instanceDetails.trace).filter(entry => !entry.endTime) : [];
 
-  async function fetchDiagram(definitionId) {
+  async function checkDiagram(instanceDetails) {
+
+    const currentHash = (diagram || {}).hash;
+
+    const newHash = (instanceDetails || {}).diagramHash;
+
+    if (!newHash || currentHash !== newHash) {
+      return fetchDiagram().then(_diagram => diagram = _diagram);
+    } else {
+      return diagram;
+    }
+  }
+
+  async function fetchDiagram() {
     const response = await fetch('/api/diagram');
 
     if (response.ok) {
-      const diagram = await response.json();
-
-      return {
-        ...diagram,
-        definitionId
-      };
+      return await response.json();
     } else {
       throw response;
     }
@@ -43,7 +49,7 @@
 
     loaderVisible = true;
 
-    diagram = {
+    const newDiagram = {
       contents,
       name
     };
@@ -53,16 +59,15 @@
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(diagram)
+      body: JSON.stringify(newDiagram)
     });
 
-    const json = await response.json();
-
     if (response.ok) {
+      diagram = await response.json();
+      instanceDetails = null;
+
       loadingDiagram = Promise.resolve(diagram);
     }
-
-    console.log(json);
   }
 
   async function handleOpen(event) {
@@ -103,7 +108,10 @@
       method: 'POST'
     });
 
-    const json = await response.json();
+    await response.json();
+
+    instanceDetails = null;
+    runError = null;
 
     setTimeout(() => {
       getProcessInstanceDetails();
