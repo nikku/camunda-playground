@@ -303,7 +303,7 @@ async function create(options) {
 
   // static resources
 
-  app.use('/', sirv(staticDirectory));
+  app.use('/', sirv(staticDirectory, { dev: process.env.NODE_ENV === 'development'}));
 
   app.get('/', (req, res, next) => {
     res.sendFile(path.join(staticDirectory, 'index.html'));
