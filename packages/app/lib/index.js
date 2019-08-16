@@ -11,7 +11,8 @@ const getPort = require('get-port');
 const { json } = require('body-parser');
 
 const {
-  readFile
+  readFile,
+  hash
 } = require('./util');
 
 const middlewares = [ failSafe, compat ];
@@ -54,7 +55,16 @@ async function create(options) {
       return null;
     }
 
-    return readFile(diagramPath);
+    const diagram = readFile(diagramPath);
+
+    const {
+      contents
+    } = diagram;
+
+    return {
+      ...diagram,
+      hash: hash(contents)
+    };
   }
 
   async function getInstanceDetails() {
@@ -68,11 +78,16 @@ async function create(options) {
       definitionId
     } = processInstance;
 
+    const {
+      diagramHash
+    } = deployment;
+
     const details = await engine.getProcessInstanceDetails(processInstance);
 
     return {
       id,
       definitionId,
+      diagramHash,
       state: getStateFromDetails(details),
       trace: getTraceFromDetails(details)
     };
@@ -102,7 +117,7 @@ async function create(options) {
         console.log('Process deployed and instance started');
       }
     } catch (err) {
-      console.warn('Failed to run diagram: %s', err);
+      console.warn('Failed to run diagram', err);
     }
   }
 
@@ -111,7 +126,10 @@ async function create(options) {
     clear();
 
     try {
-      deployment = await engine.deployDiagram(newDiagram);
+      deployment = {
+        ...await engine.deployDiagram(newDiagram),
+        diagramHash: hash(newDiagram.contents)
+      };
 
       processDefinition = deployment.deployedProcessDefinition;
 
@@ -262,6 +280,7 @@ async function create(options) {
       contents,
       name,
       path,
+      hash: hash(contents),
       mtimeMs: -1
     };
 
