@@ -138,6 +138,11 @@
     }
   }
 
+  .icon-loading {
+    animation: jump 1s infinite;
+    animation-timing-function: ease;
+  }
+
   .run-error,
   .run-details {
     font: 13px monospace;
