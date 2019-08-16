@@ -74,7 +74,7 @@ export default class ProcessInstance {
   }
 
   show(processInstance) {
-    const { id } = processInstance;
+    const { id: processInstanceId } = processInstance;
 
     const connections = this._getConnections(processInstance);
 
@@ -88,9 +88,9 @@ export default class ProcessInstance {
     activities.forEach(activity => {
       // this._addActivityMarker(activity);
 
-      const activityId = find(processInstance.trace, a => a.activityId === activity.id).id.split(':')[1];
+      const taskId = find(processInstance.trace, a => a.activityId === activity.id).taskId;
 
-      this._addActivityButton(activity, activityId, id);
+      this._addActivityButton(activity, taskId, processInstanceId);
     });
   }
 
@@ -158,7 +158,7 @@ export default class ProcessInstance {
         element: activity,
         html: domify(`
           <a class="element-overlay info" target="_blank" href="${ url }">
-            <svg width="1.2em" height="1.2em" style="vertical-align: text-bottom" viewBox="0 0 12 16" fill="currentColor" version="1.1" aria-hidden="true"><path fill-rule="evenodd" d="M11 10h1v3c0 .55-.45 1-1 1H1c-.55 0-1-.45-1-1V3c0-.55.45-1 1-1h3v1H1v10h10v-3zM6 2l2.25 2.25L5 7.5 6.5 9l3.25-3.25L12 8V2H6z"></path></svg> Tasklist
+            <svg width="1.2em" height="1.2em" style="vertical-align: text-bottom" viewBox="0 0 12 16" fill="currentColor" version="1.1" aria-hidden="true"><path fill-rule="evenodd" d="M11 10h1v3c0 .55-.45 1-1 1H1c-.55 0-1-.45-1-1V3c0-.55.45-1 1-1h3v1H1v10h10v-3zM6 2l2.25 2.25L5 7.5 6.5 9l3.25-3.25L12 8V2H6z"></path></svg> <span class="long">Tasklist</span>
           </a>
         `)
       });
@@ -224,7 +224,7 @@ function isConnection(element) {
   return !!element.waypoints;
 }
 
-function getTasklistUrl(activityId, processInstanceId) {
+function getTasklistUrl(taskId, processInstanceId) {
   const searchQuery = [
     {
       type: 'processInstanceId',
@@ -234,7 +234,7 @@ function getTasklistUrl(activityId, processInstanceId) {
     }
   ];
 
-  const url = `http://localhost:8080/camunda/app/tasklist/default/#/?searchQuery=${ JSON.stringify(searchQuery) }`;
+  const url = `http://localhost:8080/camunda/app/tasklist/default/#/?searchQuery=${ JSON.stringify(searchQuery) }&task=${ taskId }`;
 
   return encodeURI(url);
 }

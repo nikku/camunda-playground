@@ -1,4 +1,8 @@
-import { append, attr, create } from "tiny-svg";
+import {
+  append as svgAppend,
+  attr as svgAttr,
+  create as svgCreate
+} from "tiny-svg";
 
 import { isObject, isUndefined } from "min-dash";
 
@@ -6,14 +10,14 @@ const FILL = '#52B415',
       STROKE_WIDTH = 3;
 
 export function createActivityMarker(activity) {
-  const circle = create('circle');
+  const circle = svgCreate('circle');
 
   const activityMid = {
     x: activity.x + activity.width / 2,
     y: activity.y + activity.height / 2
   };
 
-  attr(circle, {
+  svgAttr(circle, {
     cx: activityMid.x,
     cy: activityMid.y,
     r: 10,
@@ -28,13 +32,12 @@ export function createActivityMarker(activity) {
 export function createConnectionMarker(connection) {
   const points = connection.waypoints;
 
-  const path = create("path");
+  const path = svgCreate("path");
 
   const data = getData(points);
 
-  attr(path, "d", data);
-
-  attr(path, {
+  svgAttr(path, {
+    d: data,
     fill: "none",
     stroke: FILL,
     strokeWidth: STROKE_WIDTH,

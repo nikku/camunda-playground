@@ -9,16 +9,41 @@ body {
 }
 
 .element-overlay {
+  display: block;
   background: #FFF;
-  border-radius: 3px;
+  border-radius: 16px;
   border: solid 1px #E0E0E0;
   color: #444;
+  animation: jump 1s infinite;
+  animation-timing-function: ease;
+  position: relative;
+  transform: scale(1);
+  transition: all 0.2 ease-in-out;
+  box-sizing: border-box;
+
+  .long {
+    display: none;
+  }
 }
 
 .element-overlay:hover {
   background: #E0E0E0;
+  border-radius: 3px;
+  width: auto;
+  animation-name: none;
+
+  .long {
+    display: initial;
+  }
 }
 
 .element-overlay.info {
   @include button(#0073e6);
+  border-radius: 16px;
+}
+
+@keyframes jump {
+  50% {
+    transform: scale(1.1);
+  }
 }
