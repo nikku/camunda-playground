@@ -160,9 +160,11 @@
 {#if runError}
 
   <div class="run-error">
-
     <h4>{runError.message}</h4>
-    <pre>{JSON.stringify(runError.details, null, '  ') }</pre>
+
+    {#if runError.details}
+      <pre>{JSON.stringify(runError.details, null, '  ') }</pre>
+    {/if}
   </div>
 
 {/if}
@@ -176,7 +178,6 @@
   {/if}
 
 {/if}
-
 
 {#if instanceDetails && instanceDetails.state === 'running'}
   <button class="start-new-instance running" on:click={ handleRestart }><i class="fas fa-redo"></i> Restart</button>
