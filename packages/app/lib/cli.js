@@ -22,16 +22,27 @@ const options = mri(argv, {
     verbose: false
   },
   alias: {
-    diagramEditor: 'diagram-editor'
+    diagramEditor: 'diagram-editor',
+    version: 'v'
   }
 });
 
+
+if (options.version) {
+  console.log(require('../package').version);
+
+  process.exit(0);
+}
 
 if (options.help) {
   console.log(`usage: camunda-playground [...options] [diagram]
 
   Options:
-    --diagram-editor          tool to edit the diagram in
+        --diagram-editor      tool to edit the diagram in
+
+    -v, --version             output tool version
+        --help                show help
+
 
   Examples:
     $ camunda-playground --diagram-editor=camunda-modeler foo.bpmn
