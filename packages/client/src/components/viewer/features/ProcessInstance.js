@@ -88,7 +88,7 @@ export default class ProcessInstance {
 
     dottedConnections.forEach(connection => {
       this._addConnectionMarker(connection, {
-        strokeDasharray: 4 
+        strokeDasharray: 4
       });
     });
 
@@ -192,7 +192,7 @@ export default class ProcessInstance {
         element: activity,
         html: domify(`
           <a class="element-overlay info" target="_blank" href="${ url }">
-            <svg width="1.2em" height="1.2em" style="vertical-align: text-bottom" viewBox="0 0 12 16" fill="currentColor" version="1.1" aria-hidden="true"><path fill-rule="evenodd" d="M11 10h1v3c0 .55-.45 1-1 1H1c-.55 0-1-.45-1-1V3c0-.55.45-1 1-1h3v1H1v10h10v-3zM6 2l2.25 2.25L5 7.5 6.5 9l3.25-3.25L12 8V2H6z"></path></svg> <span class="long">Tasklist</span>
+            <svg width="1.2em" height="1.2em" class="icon" viewBox="0 0 12 16" fill="currentColor" version="1.1" aria-hidden="true"><path fill-rule="evenodd" d="M11 10h1v3c0 .55-.45 1-1 1H1c-.55 0-1-.45-1-1V3c0-.55.45-1 1-1h3v1H1v10h10v-3zM6 2l2.25 2.25L5 7.5 6.5 9l3.25-3.25L12 8V2H6z"></path></svg> Tasklist <span class="long">Tasklist</span>
           </a>
         `)
       });
