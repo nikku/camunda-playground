@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.0.6
+
+* `FEAT`: display no diagram hint
+* `FIX`: make diagram upload not fail if deployment failed
+* `DOCS`: add fancy screenshots and run instructions
+
 ## 0.0.5
 
 * `FEAT`: display summary
