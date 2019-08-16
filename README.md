@@ -2,7 +2,7 @@
 
 Try out and explore [Camunda](https://camunda.com/) in minutes, not hours.
 
-![Camunda Playground in action](./packages/app/docs/screenshot.png)
+![Camunda Playground in action](https://raw.githubusercontent.com/nikku/camunda-playground/master/packages/app/docs/screenshot.png)
 
 
 ## Usage
