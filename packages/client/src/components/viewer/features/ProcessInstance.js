@@ -88,7 +88,8 @@ export default class ProcessInstance {
 
     dottedConnections.forEach(connection => {
       this._addConnectionMarker(connection, {
-        strokeDasharray: 4
+        strokeDasharray: '1 8',
+        strokeLinecap: 'round'
       });
     });
 
