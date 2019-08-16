@@ -170,7 +170,8 @@ async function create(options) {
         activityType,
         startTime,
         endTime,
-        durationInMillis
+        durationInMillis,
+        taskId
       } = instance;
 
       instancesById[id] = {
@@ -180,7 +181,8 @@ async function create(options) {
         activityType,
         startTime,
         endTime,
-        durationInMillis
+        durationInMillis,
+        taskId
       };
 
       return instancesById;
