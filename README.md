@@ -1,6 +1,6 @@
-# camunda-playground
+# Camunda Playground
 
-Try out and explore [Camunda](https://camunda.com/) in minutes, now hours.
+Try out and explore [Camunda](https://camunda.com/) in minutes, not hours.
 
 ![Camunda Playground in action](./packages/app/docs/screenshot.png)
 
