@@ -181,17 +181,22 @@
       margin: 10px 0 10px 0;
     }
 
+    .wait-states ul {
+      margin: 0;
+      padding-left: 25px;
+    }
+
     .footer {
       border: none;
       border-top: dotted 1px #CCC;
-      margin: 10px 0;
-      padding-top: 10px;
+      margin: 15px 0;
+      padding-top: 15px;
     }
 
     .status-icon {
       float: left;
       margin: 5px;
-      margin-left: -48px;
+      margin-left: -45px;
     }
   }
 
@@ -272,7 +277,7 @@
 
     {#if waitStates.length}
       <div class="wait-states">
-        <h4>Waiting for</h4>
+        <h4>Waiting for...</h4>
 
         <ul>
           {#each waitStates as waitState}
