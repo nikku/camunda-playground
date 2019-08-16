@@ -57,6 +57,7 @@
     ],
     "ignore": [
       ".run-camunda/*",
+      "static/*",
       "tmp/*",
       "test/*"
     ]
