@@ -3,6 +3,8 @@
 
   import Viewer from './viewer/Viewer';
 
+  import { keys } from 'min-dash';
+
   export let diagram;
 
   export let instanceDetails;
@@ -55,7 +57,26 @@
     });
   };
 
+  let lastDetails;
+
+  function needsUpdate(oldDetails, newDetails) {
+    if (!oldDetails || !oldDetails.trace) {
+      return true;
+    }
+
+    if (keys(oldDetails.trace).length !== keys(newDetails.trace).length) {
+      return true;
+    }
+
+    return false;
+  }
+
   function updateInstance(details) {
+    if (!needsUpdate(lastDetails, details)) {
+      return;
+    }
+
+    lastDetails = details;
 
     viewer.clearProcessInstance();
 
