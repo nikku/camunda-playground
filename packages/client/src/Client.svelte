@@ -90,6 +90,8 @@
   setInterval(getProcessInstanceDetails, 1000);
 
   async function handleRestart() {
+    instanceDetails = null;
+
     loaderVisible = true;
 
     const response = await fetch('/api/process-instance/start', {

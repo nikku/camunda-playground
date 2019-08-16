@@ -26,6 +26,8 @@
   $: {
     if (shownDiagram && instanceDetails && shownDiagram.definitionId === instanceDetails.definitionId) {
       updateInstance(instanceDetails);
+    } else {
+      viewer.clearProcessInstance();
     }
   };
 
