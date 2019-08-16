@@ -7,7 +7,7 @@ import {
 import { isObject, isUndefined } from "min-dash";
 
 const FILL = '#52B415',
-      STROKE_WIDTH = 3;
+      STROKE_WIDTH = 4;
 
 export function createActivityMarker(activity) {
   const circle = svgCreate('circle');
@@ -29,7 +29,7 @@ export function createActivityMarker(activity) {
   return circle;
 }
 
-export function createConnectionMarker(connection) {
+export function createConnectionMarker(connection, attrs = {}) {
   const points = connection.waypoints;
 
   const path = svgCreate("path");
@@ -43,6 +43,8 @@ export function createConnectionMarker(connection) {
     strokeWidth: STROKE_WIDTH,
     markerEnd: "url(#arrow)"
   });
+
+  svgAttr(path, attrs);
 
   return path;
 }
@@ -141,7 +143,9 @@ function getMid(a, b) {
 
 const OFFSET = 10;
 
-const random = Math.round(Math.random() * 2 * OFFSET - OFFSET);
+let random = Math.round(Math.random() * 2 * OFFSET - OFFSET);
+
+random = 0;
 
 function randomOffset(value) {
   if (isObject(value)) {

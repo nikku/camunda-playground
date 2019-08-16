@@ -53,10 +53,10 @@ export default class ProcessInstance {
       svgAttr(marker, {
         id: 'arrow',
         viewBox: '0 0 10 10',
-        refX: 5,
+        refX: 7,
         refY: 5,
-        markerWidth: 6,
-        markerHeight: 6,
+        markerWidth: 4,
+        markerHeight: 4,
         orient: 'auto-start-reverse'
       });
 
@@ -64,7 +64,9 @@ export default class ProcessInstance {
 
       svgAttr(path, {
         d: 'M 0 0 L 10 5 L 0 10 z',
-        fill: FILL
+        fill: FILL,
+        stroke: 'blue',
+        strokeWidth: 0
       });
 
       svgAppend(marker, path);
@@ -80,6 +82,14 @@ export default class ProcessInstance {
 
     connections.forEach(connection => {
       this._addConnectionMarker(connection);
+    });
+
+    const dottedConnections = this._getDottedConnections(connections);
+
+    dottedConnections.forEach(connection => {
+      this._addConnectionMarker(connection, {
+        strokeDasharray: 4 
+      });
     });
 
     // activities that have NOT ended
@@ -150,6 +160,30 @@ export default class ProcessInstance {
     return connections;
   }
 
+  _getDottedConnections(connections) {
+    let dottedConnections = [];
+
+    connections.forEach(connection => {
+      const { target } = connection;
+
+      connections.forEach(c => {
+        const { source } = c;
+
+        if (source === target) {
+          dottedConnections.push({
+            waypoints: [
+              connection.waypoints[ connection.waypoints.length - 1],
+              getMid(target),
+              c.waypoints[0]
+            ]
+          });
+        }
+      });
+    });
+
+    return dottedConnections;
+  }
+
   _addActivityButton(activity, activityId, processInstanceId) {
     if (is(activity, 'bpmn:UserTask')) {
       const url = getTasklistUrl(activityId, processInstanceId);
@@ -198,8 +232,8 @@ export default class ProcessInstance {
     svgAppend(this._getLayer(), createActivityMarker(activity))
   }
 
-  _addConnectionMarker(connection) {
-    svgAppend(this._getLayer(), createConnectionMarker(connection))
+  _addConnectionMarker(connection, attrs) {
+    svgAppend(this._getLayer(), createConnectionMarker(connection, attrs))
   }
 
   _getLayer() {
@@ -237,4 +271,11 @@ function getTasklistUrl(taskId, processInstanceId) {
   const url = `http://localhost:8080/camunda/app/tasklist/default/#/?searchQuery=${ JSON.stringify(searchQuery) }&task=${ taskId }`;
 
   return encodeURI(url);
+}
+
+function getMid(shape) {
+  return {
+    x: shape.x + shape.width / 2,
+    y: shape.y + shape.height / 2
+  };
 }
