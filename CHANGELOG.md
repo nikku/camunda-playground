@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.0.8
+
+* `FIX`: betta screenshot
+
 ## 0.0.7
 
 * `CHORE`: optimize diagram loading
