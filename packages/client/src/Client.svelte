@@ -101,8 +101,6 @@
     setTimeout(() => {
       getProcessInstanceDetails();
 
-      console.log('new instance started', json);
-
       loaderVisible = false;
     }, 500);
   }

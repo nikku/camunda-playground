@@ -152,8 +152,8 @@ export default class ProcessInstance {
 
   _addActivityButton(activity, activityId, processInstanceId) {
     if (is(activity, 'bpmn:UserTask')) {
-      const url = `http://localhost:8080/camunda/app/tasklist/default/#/?searchQuery=%5B%7B%22type%22:%22processInstanceId%22,%22operator%22:%22eq%22,%22value%22:%22${ processInstanceId }%22,%22name%22:%22%22%7D%5D&filter=f331efa7-bf6c-11e9-8f11-0028f8fb8528&sorting=%5B%7B%22sortBy%22:%22created%22,%22sortOrder%22:%22desc%22%7D%5D&task=${ activityId }`;
-
+      const url = getTasklistUrl(activityId, processInstanceId);
+      
       this._addOverlay({
         element: activity,
         html: domify(`<a class="element-overlay info" target="_blank" href="${ url }"><i class="fas fa-external-link-alt"></i> Tasklist</a>`)
@@ -218,4 +218,19 @@ ProcessInstance.$inject = [
 
 function isConnection(element) {
   return !!element.waypoints;
+}
+
+function getTasklistUrl(activityId, processInstanceId) {
+  const searchQuery = [
+    {
+      type: 'processInstanceId',
+      operator: 'eq',
+      value: processInstanceId,
+      name: ''
+    }
+  ];
+
+  const url = `http://localhost:8080/camunda/app/tasklist/default/#/?searchQuery=${ JSON.stringify(searchQuery) }`;
+
+  return encodeURI(url);
 }
