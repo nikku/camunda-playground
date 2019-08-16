@@ -15,9 +15,7 @@
 
   $: definitionId = instanceDetails && instanceDetails.definitionId;
 
-  $: loadingDiagram = fetchDiagram(definitionId).then(_diagram => {
-    diagram = _diagram;
-  });
+  $: loadingDiagram = fetchDiagram(definitionId).then(_diagram => diagram = _diagram);
 
   $: waitStates = instanceDetails ? Object.values(instanceDetails.trace).filter(entry => !entry.endTime) : [];
 
