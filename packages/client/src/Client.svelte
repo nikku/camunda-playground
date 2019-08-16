@@ -191,7 +191,7 @@
     .status-icon {
       float: left;
       margin: 5px;
-      margin-left: -45px;
+      margin-left: -48px;
     }
   }
 
