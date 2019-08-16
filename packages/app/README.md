@@ -29,6 +29,7 @@ npm install -g camunda-playground
 ## Related
 
 * [run-camunda](https://github.com/nikku/run-camunda) - Download and spin up Camunda painlessly from Node.js
+* [Camunda Modeler](https://github.com/camunda/camunda-modeler) - The Camunda modeling and workflow implementation app
 
 
 ## License
