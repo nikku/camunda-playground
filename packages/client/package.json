@@ -1,6 +1,6 @@
 {
   "name": "camunda-playground-client",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "private": true,
   "devDependencies": {
     "bpmn-js": "^5.0.0",
