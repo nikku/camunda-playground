@@ -59,22 +59,10 @@
     });
   };
 
-  let lastDetails;
-
-  function needsUpdate(oldDetails, newDetails) {
-    if (!oldDetails || !oldDetails.trace) {
-      return true;
-    }
-
-    if (keys(oldDetails.trace).length !== keys(newDetails.trace).length) {
-      return true;
-    }
-
-    return false;
-  }
+  let lastDetails = null;
 
   function updateInstance(details) {
-    if (!needsUpdate(lastDetails, details)) {
+    if (lastDetails && JSON.stringify(lastDetails) === JSON.stringify(details)) {
       return;
     }
 

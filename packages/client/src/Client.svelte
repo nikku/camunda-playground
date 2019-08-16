@@ -79,6 +79,7 @@
 
     if (response.ok) {
       instanceDetails = await response.json();
+
       runError = null;
     } else {
       runError = await response.json();
