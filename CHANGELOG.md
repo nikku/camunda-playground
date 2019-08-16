@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.0.5
+
+* `FEAT`: display summary
+* `FIX`: uploaded diagram not deploying
+
 ## 0.0.4
 
 * `FIX`: correct executable
