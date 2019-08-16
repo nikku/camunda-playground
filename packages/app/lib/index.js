@@ -117,7 +117,7 @@ async function create(options) {
 
       if (!processDefinition) {
         runError = {
-          message: 'no executable process to run',
+          message: 'No executable process',
           details: 'No process in the diagram marked as isExecutable',
           state: 'NOT_RUNNABLE'
         };
@@ -209,7 +209,7 @@ async function create(options) {
       console.error('failed to deploy diagram', err);
 
       return res.status(500).json({
-        message: 'failed to deploy diagram'
+        message: 'diagram could not be deployed'
       });
     }
   });

@@ -67,7 +67,7 @@ function EngineApi(camundaBaseUrl) {
 
     const details = await response.json();
 
-    throw responseError('start process instance failed', response, details);
+    throw responseError('starting process instance failed', response, details);
   }
 
   async function getProcessInstanceDetails(processInstance) {
