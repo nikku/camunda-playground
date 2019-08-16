@@ -47,7 +47,7 @@ function EngineApi(camundaBaseUrl) {
 
     const details = await response.json();
 
-    throw responseError('deployment failed', response, details);
+    throw responseError('Deployment failed', response, details);
   }
 
   async function startProcessInstance(definition) {
@@ -67,7 +67,7 @@ function EngineApi(camundaBaseUrl) {
 
     const details = await response.json();
 
-    throw responseError('starting process instance failed', response, details);
+    throw responseError('Starting process instance failed', response, details);
   }
 
   async function getProcessInstanceDetails(processInstance) {
