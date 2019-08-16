@@ -172,15 +172,13 @@
 {#if diagram}
 
   {#if diagram.path}
-    <a class="diagram-name" href="#" title="Open externally" on:click={ handleOpen }><i class="fas fa-external-link-alt"></i> { diagram.path }</a>
+    <a class="diagram-name" href="#" title="Open externally" on:click={ handleOpen }>
+      <svg width="1.2em" height="1.2em" style="vertical-align: text-bottom" viewBox="0 0 12 16" fill="currentColor" version="1.1" aria-hidden="true"><path fill-rule="evenodd" d="M11 10h1v3c0 .55-.45 1-1 1H1c-.55 0-1-.45-1-1V3c0-.55.45-1 1-1h3v1H1v10h10v-3zM6 2l2.25 2.25L5 7.5 6.5 9l3.25-3.25L12 8V2H6z"></path></svg> { diagram.path }
+    </a>
   {:else}
     <div class="diagram-name">{ diagram.name }</div>
   {/if}
 
 {/if}
 
-{#if instanceDetails && instanceDetails.state === 'running'}
-  <button class="start-new-instance running" on:click={ handleRestart }><i class="fas fa-redo"></i> Restart</button>
-{:else}
-  <button class="start-new-instance completed" on:click={ handleRestart }><i class="fas fa-redo"></i> Restart</button>
-{/if}
+<button class:running={ instanceDetails && instanceDetails.state === 'running' } class:completed={instanceDetails && instanceDetails.state !== 'running' } class="start-new-instance" on:click={ handleRestart }><svg height="1.2em" viewBox="0 0 12 16" version="1.1" width="1.2em" style="vertical-align: text-bottom" aria-hidden="true" fill="currentColor"><path fill-rule="evenodd" d="M10.24 7.4a4.15 4.15 0 0 1-1.2 3.6 4.346 4.346 0 0 1-5.41.54L4.8 10.4.5 9.8l.6 4.2 1.31-1.26c2.36 1.74 5.7 1.57 7.84-.54a5.876 5.876 0 0 0 1.74-4.46l-1.75-.34zM2.96 5a4.346 4.346 0 0 1 5.41-.54L7.2 5.6l4.3.6-.6-4.2-1.31 1.26c-2.36-1.74-5.7-1.57-7.85.54C.5 5.03-.06 6.65.01 8.26l1.75.35A4.17 4.17 0 0 1 2.96 5z"></path></svg> Restart</button>
