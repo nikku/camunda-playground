@@ -112,7 +112,19 @@ async function create(options) {
 
     try {
       deployment = await engine.deployDiagram(newDiagram);
+
       processDefinition = deployment.deployedProcessDefinition;
+
+      if (!processDefinition) {
+        runError = {
+          message: 'no executable process to run',
+          details: 'No process in the diagram marked as isExecutable',
+          state: 'NOT_RUNNABLE'
+        };
+
+        return;
+      }
+
       processInstance = await engine.startProcessInstance(processDefinition);
 
       fetchedDetails = getInstanceDetails();

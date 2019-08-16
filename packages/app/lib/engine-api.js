@@ -16,7 +16,7 @@ function EngineApi(camundaBaseUrl) {
     form.append('deployment-name', 'camunda-playground-deployment');
     form.append('deployment-source', 'camunda-playground');
 
-    const diagramName = path.basename(diagram.path);
+    const diagramName = diagram.path && path.basename(diagram.path) || diagram.name;
 
     form.append(diagramName, diagram.contents, {
       filename: diagramName,
@@ -41,7 +41,7 @@ function EngineApi(camundaBaseUrl) {
       return {
         id,
         deployedProcessDefinitions,
-        deployedProcessDefinition: Object.values(deployedProcessDefinitions)[0]
+        deployedProcessDefinition: Object.values(deployedProcessDefinitions || {})[0]
       };
     }
 
