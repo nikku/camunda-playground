@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.0.7
+
+* `CHORE`: optimize diagram loading
+
 ## 0.0.6
 
 * `FEAT`: display no diagram hint
