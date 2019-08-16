@@ -214,7 +214,7 @@ async function create(options) {
     const diagram = getDiagram();
 
     if (!diagram) {
-      return res.status(400).json({
+      return res.status(412).json({
         message: 'no diagram'
       });
     }
@@ -289,7 +289,7 @@ async function create(options) {
       console.error('failed to deploy uploaded diagram', err);
     });
 
-    return res.status(201).json({});
+    return res.status(201).json(uploadedDiagram);
   });
 
   app.get('/api/process-instance', ...middlewares, async (req, res, next) => {
