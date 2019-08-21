@@ -23,10 +23,7 @@ import {
 
 import { is } from 'bpmn-js/lib/util/ModelUtil';
 
-import {
-  createActivityMarker,
-  createConnectionMarker
-} from './ProcessInstanceUtil';
+import { createCurve } from 'svg-curves';
 
 const FILL = '#52B415';
 
@@ -98,8 +95,6 @@ export default class ProcessInstance {
     const activities = this._getActivities(processInstance, activity => !activity.endTime);
 
     activities.forEach(activity => {
-      // this._addActivityMarker(activity);
-
       const taskId = find(processInstance.trace, a => a.activityId === activity.id).taskId;
 
       this._addActivityButton(activity, taskId, processInstanceId);
@@ -220,22 +215,8 @@ export default class ProcessInstance {
     this._overlays.remove({ type: 'process-instance' });
   }
 
-  _addMarker(element) {
-    if (isConnection(element)) {
-      this._addConnectionMarker(element);
-
-      return;
-    }
-
-    // this._addActivityMarker(element);
-  }
-
-  _addActivityMarker(activity) {
-    svgAppend(this._getLayer(), createActivityMarker(activity))
-  }
-
   _addConnectionMarker(connection, attrs) {
-    svgAppend(this._getLayer(), createConnectionMarker(connection, attrs))
+    svgAppend(this._getLayer(), createCurve(connection.waypoints, attrs));
   }
 
   _getLayer() {
