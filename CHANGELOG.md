@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.0
+
+* `FEAT`: add link to Camunda Cockpit
+* `FEAT`: give links to Camunda a unique color
+* `FEAT`: provide descriptive titles to Camunda links
+
 ## 0.0.8
 
 * `FIX`: betta screenshot
