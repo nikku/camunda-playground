@@ -2,6 +2,7 @@
 
 ## 0.1.0
 
+* `FEAT`: download and run Camunda 7.11 per default
 * `FEAT`: add link to Camunda Cockpit
 * `FEAT`: give links to Camunda a unique color
 * `FEAT`: provide descriptive titles to Camunda links
