@@ -2,6 +2,7 @@ import {
   filter,
   find,
   forEach,
+  assign,
   isFunction,
   map,
   matchPattern,
@@ -78,7 +79,9 @@ export default class ProcessInstance {
     const connections = this._getConnections(processInstance);
 
     connections.forEach(connection => {
-      this._addConnectionMarker(connection);
+      this._addConnectionMarker(connection, {
+        markerEnd: 'url(#arrow)'
+      });
     });
 
     const dottedConnections = this._getDottedConnections(connections);
@@ -86,8 +89,7 @@ export default class ProcessInstance {
     dottedConnections.forEach(connection => {
       this._addConnectionMarker(connection, {
         strokeDasharray: '1 8',
-        strokeLinecap: 'round',
-        marker: null
+        strokeLinecap: 'round'
       });
     });
 
@@ -215,7 +217,13 @@ export default class ProcessInstance {
     this._overlays.remove({ type: 'process-instance' });
   }
 
-  _addConnectionMarker(connection, attrs) {
+  _addConnectionMarker(connection, attrs={}) {
+
+    attrs = assign({
+      stroke: FILL,
+      strokeWidth: 4
+    }, attrs);
+
     svgAppend(this._getLayer(), createCurve(connection.waypoints, attrs));
   }
 
