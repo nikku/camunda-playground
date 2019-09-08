@@ -128,6 +128,8 @@
   .diagram-name {
     @include button(#E0E0E0, false);
 
+    background: white;
+
     position: absolute;
     left: 20px;
     top: 20px;
@@ -187,6 +189,13 @@
 
     .header {
       margin: 10px 0 10px 0;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      .run-state {
+        flex-grow: 1;
+      }
     }
 
     .wait-states ul {
@@ -206,6 +215,10 @@
       margin: 5px;
       margin-left: -45px;
     }
+  }
+
+  .cockpit-link {
+    @include camunda-link;
   }
 
   .start-new-instance {
@@ -268,14 +281,22 @@
 
     <h4 class="header">
 
-      {#if runError}
-        Failed to run
-      {:else if !instanceDetails}
-        Loading instance details
-      {:else if instanceDetails.state === 'running'}
-        Instance running
-      {:else}
-        Instance finished
+      <span class="run-state">
+        {#if runError}
+          Failed to run
+        {:else if !instanceDetails}
+          Loading instance details
+        {:else if instanceDetails.state === 'running'}
+          Instance running
+        {:else}
+          Instance finished
+        {/if}
+      </span>
+
+      {#if instanceDetails && instanceDetails.state === 'running'}
+        <a class="cockpit-link" href="http://localhost:8080/camunda/app/cockpit/default/#/process-instance/{ instanceDetails.id }" title="Open in Camunda Cockpit">
+          <svg width="1.2em" height="1.2em" class="icon" viewBox="0 0 12 16" fill="currentColor" version="1.1" aria-hidden="true"><path fill-rule="evenodd" d="M11 10h1v3c0 .55-.45 1-1 1H1c-.55 0-1-.45-1-1V3c0-.55.45-1 1-1h3v1H1v10h10v-3zM6 2l2.25 2.25L5 7.5 6.5 9l3.25-3.25L12 8V2H6z"></path></svg> <span class="long">Cockpit</span>
+        </a>
       {/if}
     </h4>
 

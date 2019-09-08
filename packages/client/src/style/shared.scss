@@ -16,10 +16,29 @@
   padding: 6px 12px;
   font: 14px monospace;
   text-decoration: none;
-  display: block;
+  display: inline-block;
   white-space: nowrap;
 
   &:hover {
     background: $color;
+  }
+}
+
+@mixin camunda-link {
+  @include button(#a40e20);
+
+  border-radius: 16px;
+  box-sizing: border-box;
+
+  .long {
+    display: none;
+  }
+
+  &:hover {
+    border-radius: 16px;
+
+    .long {
+      display: initial;
+    }
   }
 }
