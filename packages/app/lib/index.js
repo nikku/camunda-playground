@@ -8,7 +8,7 @@ const opn = require('open');
 
 const getPort = require('get-port');
 
-const { json } = require('body-parser');
+const jsonBody = require('body/json');
 
 const {
   readFile,
@@ -19,6 +19,20 @@ const middlewares = [ failSafe, compat ];
 
 const EngineApi = require('./engine-api');
 
+
+function json() {
+
+  return (req, res, next) => jsonBody(req, res, (err, result) => {
+
+    if (err) {
+      return res.status(400).json({});
+    } else {
+      req.body = result;
+
+      next();
+    }
+  });
+}
 
 const staticDirectory = path.resolve(__dirname + '/../static');
 
@@ -272,14 +286,13 @@ async function create(options) {
 
     const {
       contents,
-      path,
       name
     } = req.body;
 
     uploadedDiagram = {
       contents,
       name,
-      path,
+      path: null,
       hash: hash(contents),
       mtimeMs: -1
     };

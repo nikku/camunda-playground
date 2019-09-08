@@ -29,7 +29,7 @@
     "auto-test": "npm test -- --watch"
   },
   "dependencies": {
-    "body-parser": "^1.18.3",
+    "body": "^5.1.0",
     "form-data": "^2.5.1",
     "get-port": "^5.0.0",
     "min-dash": "^3.5.2",
