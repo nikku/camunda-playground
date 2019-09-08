@@ -66,6 +66,7 @@
       diagram = await response.json();
       instanceDetails = null;
 
+      loaderVisible = false;
       loadingDiagram = Promise.resolve(diagram);
     }
   }
