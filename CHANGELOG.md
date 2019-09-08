@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.1
+
+* `CHORE`: reduce download size
+* `FIX`: hide loader after diagram drop
+
 ## 0.1.0
 
 * `FEAT`: download and run Camunda 7.11 per default
