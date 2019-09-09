@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.0
+
+* `CHORE`: further reduce download size
+
 ## 0.2.0
 
 * `CHORE`: further reduce download size
