@@ -1,6 +1,6 @@
 {
   "name": "camunda-playground",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Run your diagrams on Camunda and get to know tools in the stack",
   "author": {
     "name": "Nico Rehwaldt",
