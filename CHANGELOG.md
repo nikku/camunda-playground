@@ -3,6 +3,7 @@
 ## 0.3.1
 
 * `CHORE`: bump dependencies
+* `CHORE`: download and run Camunda 7.12 per default
 
 ## 0.3.0
 
