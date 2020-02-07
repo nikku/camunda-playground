@@ -30,14 +30,14 @@
   },
   "dependencies": {
     "body": "^5.1.0",
-    "form-data": "^2.5.1",
-    "get-port": "^5.0.0",
+    "form-data": "^3.0.0",
+    "get-port": "^5.1.1",
     "min-dash": "^3.5.2",
     "mri": "^1.1.4",
     "node-fetch": "^2.6.0",
-    "open": "^6.4.0",
+    "open": "^7.0.2",
     "polka": "^0.5.2",
-    "run-camunda": "^3.2.0",
+    "run-camunda": "^4.0.0",
     "sirv": "^0.4.2"
   },
   "devDependencies": {
