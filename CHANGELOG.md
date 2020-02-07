@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.1
+
+* `CHORE`: bump dependencies
+
 ## 0.3.0
 
 * `CHORE`: further reduce download size
