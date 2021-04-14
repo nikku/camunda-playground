@@ -30,15 +30,15 @@
   },
   "dependencies": {
     "body": "^5.1.0",
-    "form-data": "^3.0.0",
+    "form-data": "^4.0.0",
     "get-port": "^5.1.1",
-    "min-dash": "^3.5.2",
-    "mri": "^1.1.4",
-    "node-fetch": "^2.6.0",
-    "open": "^7.0.2",
+    "min-dash": "^3.7.0",
+    "mri": "^1.1.6",
+    "node-fetch": "^2.6.1",
+    "open": "^8.0.5",
     "polka": "^0.5.2",
     "run-camunda": "^6.0.0",
-    "sirv": "^0.4.2"
+    "sirv": "^1.0.11"
   },
   "devDependencies": {
     "chai": "^4.2.0",
