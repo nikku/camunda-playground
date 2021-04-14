@@ -37,7 +37,7 @@
     "node-fetch": "^2.6.0",
     "open": "^7.0.2",
     "polka": "^0.5.2",
-    "run-camunda": "^4.0.0",
+    "run-camunda": "^6.0.0",
     "sirv": "^0.4.2"
   },
   "devDependencies": {
