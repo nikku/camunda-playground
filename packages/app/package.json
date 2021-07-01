@@ -60,5 +60,11 @@
       "tmp/*",
       "test/*"
     ]
-  }
+  },
+  "files": [
+    "bin",
+    "lib",
+    "static",
+    "index.js"
+  ]
 }
