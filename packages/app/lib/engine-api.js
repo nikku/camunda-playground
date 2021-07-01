@@ -80,6 +80,7 @@ function EngineApi(camundaBaseUrl) {
       state,
       activityInstances
     ] = await Promise.all([
+
       // https://docs.camunda.org/manual/7.11/reference/rest/history/process-instance/get-process-instance/
       fetch(`${baseUrl}/history/process-instance/${id}`, {
         headers: {

@@ -377,6 +377,7 @@ async function create(options) {
       let tsNew = newDiagram ? newDiagram.mtimeMs : -1;
 
       if (tsOld < tsNew) {
+
         // diagram changed externally, reloading
         console.debug('Diagram changed externally, reloading');
 
