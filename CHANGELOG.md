@@ -1,8 +1,13 @@
 # Changelog
 
+## 0.4.0
+
+* `DEPS`: bump dependencies
+* `CHORE`: download and run Camunda 7.15 per default
+
 ## 0.3.1
 
-* `CHORE`: bump dependencies
+* `DEPS`: bump dependencies
 * `CHORE`: download and run Camunda 7.12 per default
 
 ## 0.3.0
