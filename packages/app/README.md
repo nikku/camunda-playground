@@ -1,5 +1,7 @@
 # Camunda Playground
 
+[![CI](https://github.com/nikku/camunda-playground/workflows/CI/badge.svg)](https://github.com/nikku/camunda-playground/actions?query=workflow%3ACI)
+
 Try out and explore [Camunda](https://camunda.com/) in minutes, not hours.
 
 ![Camunda Playground in action](https://raw.githubusercontent.com/nikku/camunda-playground/master/packages/app/docs/screenshot.png)
