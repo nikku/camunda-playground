@@ -8,9 +8,9 @@ import copy from 'rollup-plugin-copy';
 
 import { terser } from 'rollup-plugin-terser';
 
-import url from 'rollup-plugin-url';
+import url from '@rollup/plugin-url';
 import { sass } from 'svelte-preprocess-sass';
-
+import css from 'rollup-plugin-css-only'
 
 const distDir = path.resolve(__dirname + '/../app/static');
 
@@ -112,13 +112,9 @@ export default {
       limit: 3 * 1024
     }),
     svelte({
-      // enable run-time checks when not in production
-      dev: !production,
-      immutable: true,
-      // we'll extract any component CSS out into
-      // a separate file — better for performance
-      css: css => {
-        css.write(`${distDir}/bundle.css`, !production);
+      compilerOptions: {
+        dev: !production,
+        immutable: true,
       },
       preprocess: {
         style: sass({
@@ -141,6 +137,10 @@ export default {
     // https://github.com/rollup/rollup-plugin-commonjs
     resolve(),
     commonjs(),
+
+    css({
+      output: 'bundle.css'
+    }),
 
     // Watch the `public` directory and refresh the
     // browser on changes when not in production
