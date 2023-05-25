@@ -6,6 +6,10 @@ All notable changes to [camunda-playground](https://github.com/nikku/camunda-pla
 
 ___Note:__ Yet to be released changes appear here._
 
+## 0.7.1
+
+* `DOCS`: update screenshot
+
 ## 0.7.0
 
 * `FEAT`: improve playground layout
