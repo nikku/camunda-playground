@@ -28,6 +28,10 @@ const options = mri(argv, {
 });
 
 
+if (options.verbose) {
+  console.log('Parsed options: %o', options);
+}
+
 if (options.version) {
   console.log(require('../package').version);
 
