@@ -132,8 +132,8 @@
     background: white;
 
     position: absolute;
-    left: 20px;
-    top: 20px;
+    left: 12px;
+    bottom: 12px;
   }
 
   .notice {
@@ -178,8 +178,8 @@
 
   .run-details {
     position: absolute;
-    right: 20px;
-    top: 20px;
+    right: 12px;
+    top: 12px;
     width: 300px;
 
     padding: 7px 10px;
