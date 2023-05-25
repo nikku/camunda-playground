@@ -43,8 +43,10 @@ if (options.help) {
 
   Options:
         --diagram-editor      tool to edit the diagram in
+        --[no]-open           open in browser
 
     -v, --version             output tool version
+        --verbose             enable verbose logging
         --help                show help
 
 
