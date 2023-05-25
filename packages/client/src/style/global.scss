@@ -15,16 +15,38 @@ body {
 .element-overlay {
   @include camunda-link;
 
-  display: block;
   animation: jump 1s infinite;
   animation-timing-function: ease;
   position: relative;
   transform: scale(1);
   transition: all 0.2 ease-in-out;
 
+  width: auto;
+  max-width: 300px;
+
   &:hover {
-    width: auto;
     animation-name: none;
+  }
+
+  a {
+    color: white;
+  }
+
+  code {
+    border: solid 1px white;
+    display: inline-block;
+    padding: .1em .3em;
+    margin: auto -.1em;
+    border-radius: 3px;
+  }
+
+  .long {
+    flex: 1;
+  }
+
+  .long.note {
+    width: 200px;
+    white-space: normal;
   }
 }
 

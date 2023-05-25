@@ -25,20 +25,27 @@
 }
 
 @mixin camunda-link {
+  @include text-container;
   @include button(#a40e20);
 
   border-radius: 16px;
   box-sizing: border-box;
 
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+
   .long {
     display: none;
+    flex: 1;
+    margin-left: .5em;
   }
 
-  &:hover {
-    border-radius: 16px;
-
-    .long {
-      display: initial;
-    }
+  &:hover .long {
+    display: initial;
   }
+}
+
+@mixin text-container {
+  line-height: 1.5;
 }

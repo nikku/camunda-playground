@@ -25,6 +25,7 @@ import {
 import { is } from 'bpmn-js/lib/util/ModelUtil';
 
 import { createCurve } from 'svg-curves';
+import { getExternalTaskTopic } from '../../util';
 
 const FILL = '#52B415';
 
@@ -190,9 +191,27 @@ export default class ProcessInstance {
       this._addOverlay({
         element: activity,
         html: domify(`
-          <a class="element-overlay" target="_blank" href="${ url }" title="Open task in Camunda Tasklist">
-            <svg width="1.2em" height="1.2em" class="icon" viewBox="0 0 12 16" fill="currentColor" version="1.1" aria-hidden="true"><path fill-rule="evenodd" d="M11 10h1v3c0 .55-.45 1-1 1H1c-.55 0-1-.45-1-1V3c0-.55.45-1 1-1h3v1H1v10h10v-3zM6 2l2.25 2.25L5 7.5 6.5 9l3.25-3.25L12 8V2H6z"></path></svg> <span class="long">Tasklist</span>
+          <a class="element-overlay" target="_blank" href="${ url }" title="Complete task in Camunda Tasklist">
+            <svg width="1.2em" height="1.2em" class="icon" viewBox="0 0 12 16" fill="currentColor" version="1.1" aria-hidden="true"><path fill-rule="evenodd" d="M11 10h1v3c0 .55-.45 1-1 1H1c-.55 0-1-.45-1-1V3c0-.55.45-1 1-1h3v1H1v10h10v-3zM6 2l2.25 2.25L5 7.5 6.5 9l3.25-3.25L12 8V2H6z"></path></svg>
+            <span class="long">Tasklist</span>
           </a>
+        `)
+      });
+    }
+
+    if (isExternalTask(activity)) {
+
+      const topic = getExternalTaskTopic(activity);
+
+      this._addOverlay({
+        element: activity,
+        html: domify(`
+          <span class="element-overlay">
+            <svg width="1.2em" height="1.2em" class="icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="m11.28 3.22 4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.749.749 0 0 1-1.275-.326.749.749 0 0 1 .215-.734L13.94 8l-3.72-3.72a.749.749 0 0 1 .326-1.275.749.749 0 0 1 .734.215Zm-6.56 0a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042L2.06 8l3.72 3.72a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L.47 8.53a.75.75 0 0 1 0-1.06Z"></path></svg>
+            <span class="long note">
+              Execute through <code>${topic}</code> topic using an <a target="_blank" href="https://docs.camunda.org/manual/7.19/user-guide/ext-client/">external task worker</a>.
+            </span>
+          </span>
         `)
       });
     }
@@ -265,4 +284,14 @@ function getMid(shape) {
     x: shape.x + shape.width / 2,
     y: shape.y + shape.height / 2
   };
+}
+
+function isExternalTask(activity) {
+  const like = is(activity, 'camunda:ServiceTaskLike');
+
+  if (!like) {
+    return false;
+  }
+
+  return !!getExternalTaskTopic(activity);
 }

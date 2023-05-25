@@ -5,6 +5,8 @@
 
   import { keys } from 'min-dash';
 
+  import camundaModdle from 'camunda-bpmn-moddle/resources/camunda.json';
+
   export let diagram;
 
   export let instanceDetails;
@@ -17,7 +19,11 @@
   let loadingDiagram;
   let shownDiagram;
 
-  const viewer = new Viewer();
+  const viewer = new Viewer({
+    moddleExtensions: {
+      camunda: camundaModdle
+    }
+  });
 
   onMount(() => {
     viewer.attachTo(containerEl);

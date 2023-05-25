@@ -199,9 +199,17 @@
       }
     }
 
-    .wait-states ul {
+    h4 {
+      margin-bottom: 1em;
+    }
+
+    .wait-state-list {
       margin: 0;
-      padding-left: 25px;
+      padding-left: 2em;
+    }
+
+    .wait-state-list li + li {
+      margin-top: .75em;
     }
 
     .footer {
@@ -309,7 +317,7 @@
       <div class="wait-states">
         <h4>Waiting for...</h4>
 
-        <ul>
+        <ul class="wait-state-list">
           {#each waitStates as waitState}
             <li>
               {#if waitState.activityType === 'parallelGateway'}
