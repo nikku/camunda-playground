@@ -1,6 +1,6 @@
 {
   "name": "camunda-playground-client",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "private": true,
   "devDependencies": {
     "@rollup/plugin-json": "^6.0.0",
