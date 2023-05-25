@@ -1,3 +1,5 @@
+/* eslint-env node */
+
 import path from 'path';
 
 import svelte from 'rollup-plugin-svelte';
@@ -10,7 +12,8 @@ import { terser } from 'rollup-plugin-terser';
 
 import url from '@rollup/plugin-url';
 import { sass } from 'svelte-preprocess-sass';
-import css from 'rollup-plugin-css-only'
+
+import css from 'rollup-plugin-css-only';
 
 const distDir = path.resolve(__dirname + '/../app/static');
 
@@ -151,8 +154,7 @@ export default {
         { src: 'public/*', dest: distDir }
       ]
     }),
-    // If we're building for production (npm run build
-    // instead of npm run dev), minify
+
     production && terser()
   ],
   watch: {

@@ -217,7 +217,7 @@ export default class ProcessInstance {
     this._overlays.remove({ type: 'process-instance' });
   }
 
-  _addConnectionMarker(connection, attrs={}) {
+  _addConnectionMarker(connection, attrs = {}) {
 
     attrs = assign({
       stroke: FILL,
@@ -244,10 +244,6 @@ ProcessInstance.$inject = [
   'eventBus',
   'overlays'
 ];
-
-function isConnection(element) {
-  return !!element.waypoints;
-}
 
 function getTasklistUrl(taskId, processInstanceId) {
   const searchQuery = [

@@ -12,7 +12,7 @@ const additionalModules = [
 ];
 
 class Viewer extends NavigatedViewer {
-  constructor(options={}) {
+  constructor(options = {}) {
     super({
       ...options,
       additionalModules
