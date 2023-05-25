@@ -25,7 +25,7 @@ npm install -g camunda-playground
 ## Resources
 
 * [Issues](https://github.com/nikku/camunda-playground/issues)
-* [Changelog](https://github.com/nikku/camunda-playground/blob/master/CHANGELOG.md)
+* [Changelog](./CHANGELOG.md)
 
 
 ## Related
