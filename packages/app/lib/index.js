@@ -332,11 +332,11 @@ async function create(options) {
       });
     }
 
-    console.log('Opening diagram in external tool...');
-
     const app = options.diagramEditor;
 
-    await opn(diagram.path, app ? { app } : {});
+    console.log('Opening diagram in %s...', app || 'external tool');
+
+    await opn(diagram.path, app ? { app: { name: app } } : {});
 
     return res.json({});
   });

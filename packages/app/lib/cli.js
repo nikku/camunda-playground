@@ -18,7 +18,7 @@ const options = mri(argv, {
   default: {
     port: 3301,
     open: true,
-    diagramEditor: process.env.CAMUNDA_PLAYGROUND_DIAGRAM_EDITOR,
+    diagramEditor: getDefaultDiagramEditor(),
     verbose: false
   },
   alias: {
@@ -59,6 +59,12 @@ if (options.help) {
 }
 
 options.diagram = options._[0];
+
+function getDefaultDiagramEditor() {
+  return (
+    process.env.CAMUNDA_PLAYGROUND_DIAGRAM_EDITOR || [ 'camunda-modeler', 'Camunda Modeler' ]
+  );
+}
 
 async function run(options) {
 
