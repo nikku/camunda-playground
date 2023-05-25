@@ -6,6 +6,11 @@ All notable changes to [camunda-playground](https://github.com/nikku/camunda-pla
 
 ___Note:__ Yet to be released changes appear here._
 
+## 0.6.0
+
+* `FEAT`: hint on external task implementation
+* `DEPS`: bump bpmn-js and friends
+
 ## 0.5.0
 
 * `FEAT`: play using `Camunda 7.19` per default
