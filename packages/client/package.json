@@ -19,9 +19,9 @@
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-svelte": "^7.2.2",
     "rollup-plugin-terser": "^7.0.2",
-    "sass": "~1.77.4",
+    "sass": "1.77.4",
     "svelte": "^3.38.3",
-    "svelte-preprocess-sass": "^1.0.0"
+    "svelte-preprocess": "^5.1.4"
   },
   "scripts": {
     "test": "echo \"no tests\"",
@@ -30,8 +30,8 @@
     "build:watch": "run-p build:*:watch",
     "build:js:prod": "rollup -c --bundleConfigAsCjs",
     "build:js:watch": "rollup -c -w --bundleConfigAsCjs",
-    "build:css": "node-sass --include-path=node_modules src/style/global.scss -o ../app/static",
-    "build:css:prod": "run-s \"build:css -- --output-style compressed\"",
+    "build:css": "sass --load-path=../../node_modules src/style/global.scss:../app/static/global.css",
+    "build:css:prod": "run-s \"build:css -- --style compressed\"",
     "build:css:watch": "run-s build:css \"build:css -- -w\"",
     "dev": "run-s build:watch"
   },

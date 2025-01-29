@@ -129,11 +129,13 @@
   .diagram-name {
     @include button(#E0E0E0, false);
 
-    background: white;
+    & {
+      background: white;
 
-    position: absolute;
-    left: 12px;
-    bottom: 12px;
+      position: absolute;
+      left: 12px;
+      bottom: 12px;
+    }
   }
 
   .notice {
