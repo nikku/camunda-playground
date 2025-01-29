@@ -86,7 +86,7 @@ ${content}`;
   };
 }
 
-export default {
+module.exports = {
   preprocess: [
     sveltePreprocess({
       scss: {
