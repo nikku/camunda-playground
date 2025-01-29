@@ -11,94 +11,13 @@ import json from '@rollup/plugin-json';
 
 import { terser } from 'rollup-plugin-terser';
 
+import svelteConfig from './svelte.config.js';
+
 import url from '@rollup/plugin-url';
-import { sass } from 'svelte-preprocess-sass';
 
 import css from 'rollup-plugin-css-only';
 
 const distDir = path.resolve(__dirname + '/../app/static');
-
-function scriptProcessor(processors) {
-
-  return function(options) {
-
-    const {
-      content,
-      ...rest
-    } = options;
-
-    const code = processors.reduce((content, processor) => {
-      return processor({
-        content,
-        ...rest
-      }).code;
-    }, content);
-
-    return {
-      code
-    };
-  };
-}
-
-function classProcessor() {
-
-  function process(content) {
-    return (
-      content
-        .replace(
-          /export let className([;\n= ]{1})/g,
-          'export { className as class }; let className$1'
-        )
-    );
-  }
-
-  return function(options) {
-
-    const {
-      content
-    } = options;
-
-    const code = process(content);
-
-    return {
-      code
-    };
-  };
-}
-
-
-function emitProcessor() {
-
-  function process(content) {
-
-    if (/\$\$emit\(/.test(content)) {
-
-      content = `
-import { createEventDispatcher } from 'svelte';
-
-const __dispatch = createEventDispatcher();
-
-${content}`;
-
-      content = content.replace(/\$\$emit\(/g, '__dispatch(');
-    }
-
-    return content;
-  }
-
-  return function(options) {
-
-    const {
-      content
-    } = options;
-
-    const code = process(content);
-
-    return {
-      code
-    };
-  };
-}
 
 
 const production = !process.env.ROLLUP_WATCH;
@@ -116,22 +35,16 @@ export default {
       limit: 3 * 1024
     }),
     svelte({
+
       compilerOptions: {
+
+        // enable run-time checks during development
         dev: !production,
-        immutable: true,
+
+        immutable: true
       },
-      preprocess: {
-        style: sass({
-          includePaths: [
-            'src/style',
-            'node_modules'
-          ]
-        }, { name: 'scss' }),
-        script: scriptProcessor([
-          classProcessor(),
-          emitProcessor()
-        ])
-      }
+
+      preprocess: svelteConfig.preprocess
     }),
 
     resolve(),
